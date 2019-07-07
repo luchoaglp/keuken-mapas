@@ -185,7 +185,8 @@ $(function() {
               <p>[${[orderLat, orderLon]}]</p>`;
 
             const icon = L.icon({
-              iconUrl
+              iconUrl,
+              iconAnchor: [18, 35]
             });
 
             const marker = L.marker([orderLat, orderLon], { icon });
