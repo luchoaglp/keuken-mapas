@@ -54,27 +54,24 @@
 <script>
 $(function() {
 
-  let zoom = 15;
+  let zoom = 16;
 
   let index = 0;
 
   let trackingRoute = [{lat:-34.92263959939668,lon:-57.95352458953858},{lat:-34.922463662231884,lon:-57.95335292816163},{lat:-34.922463662231884,lon:-57.953181266784675},{lat:-34.922604411993895,lon:-57.9530954360962},{lat:-34.92274516151449,lon:-57.95288085937501},{lat:-34.9228859107937,lon:-57.952709197998054},{lat:-34.92309703425986,lon:-57.952451705932624},{lat:-34.923343344283865,lon:-57.95206546783447},{lat:-34.92348409253708,lon:-57.95180797576905},{lat:-34.92369521446426,lon:-57.95155048370362},{lat:-34.923906335848265,lon:-57.95129299163819},{lat:-34.924152643443094,lon:-57.950906753540046},{lat:-34.924363763650206,lon:-57.9505205154419},{lat:-34.92468044294244,lon:-57.9503059387207},{lat:-34.92482118890224,lon:-57.95000553131104},{lat:-34.9249971210125,lon:-57.94953346252442},{lat:-34.92527861160434,lon:-57.94936180114747},{lat:-34.925489728914506,lon:-57.94901847839356},{lat:-34.92573603175649,lon:-57.94876098632813},{lat:-34.92608789167682,lon:-57.948417663574226},{lat:-34.92640456431503,lon:-57.948417663574226},{lat:-34.92661567872818,lon:-57.948417663574226},{lat:-34.926791606990875,lon:-57.948417663574226},{lat:-34.92710827691313,lon:-57.948460578918464},{lat:-34.92724901870849,lon:-57.948718070983894}];
 
-  const map = L.map('map').setView([-34.92136404640606, -57.95459747314454], zoom);
+  const map = L.map('map').setView([-34.9245374,-57.9524994], zoom);
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' }).addTo(map);
 
   const icon = L.icon({
-    iconUrl: './img/redMarker.svg',
-    iconAnchor: [18, 35]
+    iconUrl: './img/flashspot.gif',
+    iconSize: [25, 25]
   });
 
-  L.marker([-34.922604411993895, -57.95373916625977], { icon }).addTo(map);
-  L.marker([-34.92707309142656, -57.94876098632813], { icon }).addTo(map);
+  let circle = L.marker([-34.92270997415698, -57.95361042022706], { icon }).addTo(map);
 
-  let circle = L.circle([-34.92270997415698, -57.95361042022706], { radius: 25 }).addTo(map);
-
-  const intervalId = setInterval(tracking, 1000);
+  const intervalId = setInterval(tracking, 1500);
 
   function tracking() {
     const latLon = trackingRoute[index++];
