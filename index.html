@@ -162,13 +162,17 @@ $(function() {
 
             countGeo++;
 
-            const orderLat = parseFloat(order.latitud_pdv);
-            const orderLon = parseFloat(order.longitud_pdv);
+            const latPdv = parseFloat(order.latitud_pdv);
+            const lonPdv = parseFloat(order.longitud_pdv);
+            const latOrder = parseFloat(order.latitud_order);
+            const lonOrder = parseFloat(order.longitud_order);
+            
+            const distPdvOrder = L.latLng(latPdv, lonPdv).distanceTo(L.latLng(latOrder, lonOrder)).toFixed(2) / 1000;
 
-            minLat = orderLat > minLat ? orderLat : minLat;
-            minLon = orderLon > minLon ? orderLon : minLon;
-            maxLat = orderLat < maxLat ? orderLat : maxLat;
-            maxLon = orderLon < maxLon ? orderLon : maxLon;
+            minLat = latPdv > minLat ? latPdv : minLat;
+            minLon = lonPdv > minLon ? lonPdv : minLon;
+            maxLat = latPdv < maxLat ? latPdv : maxLat;
+            maxLon = lonPdv < maxLon ? lonPdv : maxLon;
             
             switch(order.tipo_order) {
               case 'PED':
@@ -190,14 +194,15 @@ $(function() {
 
             const desc = `<h5>${order.nombre_pdv}</h5>
               <p>${ moment(order.date).format('DD/MM/YYYY, hh:mm')} ${ order.nosalereason }</p><p>Total: $${order.total}</p>
-              <p>[${[orderLat, orderLon]}]</p>`;
+              <p>Distancia: <a href="#">${distPdvOrder} Km</a></p>
+              <p>[${[latPdv, lonPdv]}]</p>`;
 
             const icon = L.icon({
               iconUrl,
               iconAnchor: [18, 35]
             });
 
-            const marker = L.marker([orderLat, orderLon], { icon });
+            const marker = L.marker([latPdv, lonPdv], { icon });
             marker.bindPopup(desc);
             markers.push(marker);
           
