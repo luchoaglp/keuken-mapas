@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Demo Google Maps</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
+  integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+  crossorigin=""/>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- Material Design Bootstrap -->
+    <link href="css/mdb.min.css" rel="stylesheet">
+    <style>
+        #map {
+            height: 500px;
+        }
+        #header-stats {
+          background-color: #e3f2fd !important;
+        }
+    </style>
+</head>
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-dark primary-color mb-2">
+      <a class="navbar-brand" href="#">Demo Leaflet</a>
+  </nav>
+
+  <div class="container-fluid">
+    
+    <div class="row">
+      <div class="col-12">
+        <select class="mdb-select md-form" id="json-select">
+        <option value="" disabled selected>Select JSON</option>
+        <option value="ruta_425-2019.07.03.json">Ruta 425 (2019-07-03)</option>
+        <option value="ruta_425-2019.07.02.json">Ruta 425 (2019-07-02)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row mb-5">
+      <div class="col-md-8">
+        <div class="card">
+          <div class="card-body">
+            <div id="map"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-body">
+            <ul class="list-group">
+              <li class="list-group-item d-flex justify-content-between align-items-center" id="header-stats">
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Vendedor: <span id="seller"></span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span><img src="./img/redMarker.svg" alt="...">PEDIDO</span>
+                <span class="badge badge-primary badge-pill" id="ped">0</span> 
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span><img src="./img/blueMarker.svg" alt="...">CON STOCK</span>
+                <span class="badge badge-primary badge-pill" id="mnv">0</span> 
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span><img src="./img/orangeMarker.svg" alt="...">SIN VISITA</span>
+                <span class="badge badge-primary badge-pill" id="rvn">0</span> 
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>Con GEO</span>
+                <span class="badge badge-primary badge-pill" id="geo">0</span> 
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>Sin GEO</span>
+                <span class="badge badge-primary badge-pill" id="wgeo">0</span> 
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+<!-- Bootstrap tooltips -->
+<script type="text/javascript" src="js/popper.min.js"></script>
+<!-- Bootstrap core JavaScript -->
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<!-- MDB core JavaScript -->
+<script type="text/javascript" src="js/mdb.min.js"></script>
+<script src="js/moment.min.js"></script>
+
+<script>
+
+let map;
+let zoom = 15;
+let center = { lat: 0, lon: 0 };
+let markers = [];
+
+function initMap() {
+
+    if(markers.length > 0) {
+
+      map = new google.maps.Map(document.getElementById('map'), { 
+        zoom, 
+        center: { lat: center.lat, lng: center.lon },
+        mapTypeId: google.maps.MapTypeId.HYBRID
+      });
+
+      markers.forEach(marker => {
+
+        const image = {
+          url: marker.iconUrl,
+          anchor: new google.maps.Point(18, 35)
+        };
+
+        const infowindow = new google.maps.InfoWindow({
+          content: marker.desc
+        });
+
+        const myMarker = new google.maps.Marker({
+          position: marker.position,
+          icon: image, 
+          map
+        });
+
+        myMarker.addListener('click', function() {
+          infowindow.open(map, myMarker);
+        });
+
+      });
+    }
+  }
+
+$(function() {
+  
+  $headerStats = $('#header-stats');
+  $ped = $('#ped');
+  $mnv = $('#mnv');
+  $rvn = $('#rvn');
+  $geo = $('#geo');
+  $wgeo = $('#wgeo');
+  $seller = $('#seller');
+
+  $headerStats.text('Ruta 425 (2019-07-03)');
+
+  $('.mdb-select').materialSelect();
+
+  let jsonName = 'ruta_425-2019.07.03.json';
+
+  drawMap(jsonName);
+
+  let layer;
+
+  $('#json-select').change(() => {
+    markers = [];
+    //map.removeLayer(layer);
+    $headerStats.text($(this).find('option:selected').text());
+    drawMap($(this).find('option:selected').val());
+  });
+
+  function drawMap(jsonName) {
+
+    $.getJSON(`./js/${jsonName}`, { })
+      .done(orders => {
+
+        $seller.text(orders[0].nombre_seller);
+
+        let minLat = -Infinity;
+        let minLon = -Infinity;
+        let maxLat = Infinity;
+        let maxLon = Infinity;
+        let ped = 0;
+        let mnv = 0;
+        let rvn = 0;
+        let countGeo = 0;
+
+        orders.forEach(order => {
+
+          if(order.longitud_pdv != null && order.latitud_pdv != null) {
+
+            countGeo++;
+
+            const latPdv = parseFloat(order.latitud_pdv);
+            const lonPdv = parseFloat(order.longitud_pdv);
+            const latOrder = parseFloat(order.latitud_order);
+            const lonOrder = parseFloat(order.longitud_order);
+                       
+            const distPdvOrder = google.maps.geometry.spherical.computeDistanceBetween(
+              new google.maps.LatLng(latPdv, lonPdv), 
+              new google.maps.LatLng(latOrder, lonOrder)
+            ).toFixed(2) / 1000;
+
+            minLat = latPdv > minLat ? latPdv : minLat;
+            minLon = lonPdv > minLon ? lonPdv : minLon;
+            maxLat = latPdv < maxLat ? latPdv : maxLat;
+            maxLon = lonPdv < maxLon ? lonPdv : maxLon;
+            
+            switch(order.tipo_order) {
+              case 'PED':
+                ped++;
+                iconUrl = './img/redMarker.svg';
+                break;
+              case 'MNV':
+                mnv++;
+                iconUrl = './img/blueMarker.svg';
+                break;
+              case 'RVN':
+                rvn++;
+                iconUrl = './img/orangeMarker.svg';
+                break;
+              default:
+                iconUrl = './img/uniqueMarker.svg';
+                break;
+            }
+
+            const desc = `<h5>${order.nombre_pdv}</h5>
+              <p>${ moment(order.date).format('DD/MM/YYYY, hh:mm')} ${ order.nosalereason }</p><p>Total: $${order.total}</p>
+              <p>Distancia: <a href="#">${distPdvOrder} Km</a></p>
+              <p>[${[latPdv, lonPdv]}]</p>`;
+
+            const marker = { position: 
+              { lat: latPdv, lng: lonPdv },
+              iconUrl,
+              desc
+            };
+
+            markers.push(marker);
+          
+          } else {
+
+            switch(order.tipo_order) {
+              case 'PED':
+                ped++;
+                break;
+              case 'MNV':
+                mnv++;
+                break;
+              case 'RVN':
+                rvn++;
+                break;
+            }
+          }
+        });
+
+        $ped.text(ped);
+        $mnv.text(mnv);
+        $rvn.text(rvn);
+        $geo.text(countGeo);
+        $wgeo.text(orders.length - countGeo);
+
+        const distMaxMin =  google.maps.geometry.spherical.computeDistanceBetween(
+          new google.maps.LatLng(maxLat, maxLon), 
+          new google.maps.LatLng(minLat, minLon)
+        );
+        
+        zoom = distMaxMin > 10000 ? 12 : 15;
+        
+        center = { lat: (maxLat + minLat) / 2, lon: (maxLon + minLon) / 2 };
+
+        initMap();
+      });
+  }
+
+});
+</script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA3btlh_xR-Pv3RJjmNPcko1ZH6J0aHNIc&libraries=geometry&callback=initMap"></script>
+</body>
+</html>
