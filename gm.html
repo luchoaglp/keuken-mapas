@@ -32,11 +32,20 @@
   <div class="container-fluid">
     
     <div class="row">
-      <div class="col-12">
+      <div class="col-6">
         <select class="mdb-select md-form" id="json-select">
         <option value="" disabled selected>Select JSON</option>
         <option value="ruta_425-2019.07.03.json">Ruta 425 (2019-07-03)</option>
         <option value="ruta_425-2019.07.02.json">Ruta 425 (2019-07-02)</option>
+        </select>
+      </div>
+      <div class="col-6">
+        <select class="mdb-select md-form" id="map-select">
+          <option value="" disabled selected>Select Map Type</option>
+          <option value="roadmap">Roadmap</option>
+          <option value="satellite">Satellite</option>
+          <option value="hybrid">Hybrid</option>
+          <option value="terrain">Terrain</option>
         </select>
       </div>
     </div>
@@ -108,7 +117,7 @@ function initMap() {
       map = new google.maps.Map(document.getElementById('map'), { 
         zoom, 
         center: { lat: center.lat, lng: center.lon },
-        mapTypeId: google.maps.MapTypeId.HYBRID
+        mapTypeId: 'roadmap'
       });
 
       markers.forEach(marker => {
@@ -145,6 +154,8 @@ $(function() {
   $geo = $('#geo');
   $wgeo = $('#wgeo');
   $seller = $('#seller');
+  $jsonSelect = $('#json-select');
+  $mapSelect = $('#map-select');
 
   $headerStats.text('Ruta 425 (2019-07-03)');
 
@@ -156,11 +167,15 @@ $(function() {
 
   let layer;
 
-  $('#json-select').change(() => {
+  $jsonSelect.change(function() {
     markers = [];
-    //map.removeLayer(layer);
     $headerStats.text($(this).find('option:selected').text());
     drawMap($(this).find('option:selected').val());
+  });
+
+  $mapSelect.change(function() {
+    map.setMapTypeId($(this).find(':selected').val());
+    drawMap($jsonSelect.find(':selected').val());
   });
 
   function drawMap(jsonName) {
