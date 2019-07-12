@@ -26,17 +26,25 @@
 <body>
 
   <nav class="navbar navbar-expand-lg navbar-dark primary-color mb-2">
-      <a class="navbar-brand" href="#">Demo Leaflet</a>
+      <a class="navbar-brand" href="./">Demo Leaflet</a>
   </nav>
 
   <div class="container-fluid">
     
     <div class="row">
-      <div class="col-12">
+      <div class="col-6">
         <select class="mdb-select md-form" id="json-select">
         <option value="" disabled selected>Select JSON</option>
         <option value="ruta_425-2019.07.03.json">Ruta 425 (2019-07-03)</option>
         <option value="ruta_425-2019.07.02.json">Ruta 425 (2019-07-02)</option>
+        </select>
+      </div>
+      <div class="col-6">
+        <select class="mdb-select md-form" id="map-select">
+        <option value="" disabled selected>Select Map Type</option>
+        <option value="0">OpenStreetMap Mapnick</option>
+        <option value="1">Esri WorldImagery</option>
+        <option value="2">Wikimedia</option>
         </select>
       </div>
     </div>
@@ -95,8 +103,7 @@
 <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
   integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
   crossorigin=""></script>
-<script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=Promise"></script>
-<script src="js/leaflet-bing-layer.js"></script>
+<script src="js/tilesLayer.js"></script>
 <script src="js/moment.min.js"></script>
 
 <script>
@@ -104,7 +111,7 @@ $(function() {
 
   let zoom = 15;
 
-  const map = L.map('map').setView([0, 0], zoom);
+  const map = L.map('map');
 
   $headerStats = $('#header-stats');
   $ped = $('#ped');
@@ -113,16 +120,14 @@ $(function() {
   $geo = $('#geo');
   $wgeo = $('#wgeo');
   $seller = $('#seller');
+  $jsonSelect = $('#json-select');
+  $mapSelect = $('#map-select');
 
   $headerStats.text('Ruta 425 (2019-07-03)');
-  
-  /*
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' }).addTo(map);
-  */
 
-  var BING_KEY = 'ArAr2yFhTWzEn3JoaulIEonwHgGaaFo7WXjKqu678KBb8BAHFbeDN4pSYIv2pWHj';
+  let mapLayerIndex = 0;
 
-  L.tileLayer.bing({ bingMapsKey: BING_KEY, imagerySet: 'AerialWithLabels' }).addTo(map);
+  tilesLayer[mapLayerIndex].addTo(map);
 
   $('.mdb-select').materialSelect();
 
@@ -130,14 +135,24 @@ $(function() {
 
   drawMap(jsonName);
 
-  let layer;
+  let layerIcons;
+  let layerLines;
   let markers = [];
+  let lines = [];
 
-  $('#json-select').change(() => {
+  $jsonSelect.change(function() {
     markers = [];
-    map.removeLayer(layer);
-    $headerStats.text($(this).find('option:selected').text());
-    drawMap($(this).find('option:selected').val());
+    lines = [];
+    map.removeLayer(layerIcons);
+    map.removeLayer(layerLines);
+    $headerStats.text($(this).find(':selected').text());
+    drawMap($(this).find(':selected').val());
+  });
+
+  $mapSelect.change(function() {
+    map.removeLayer(tilesLayer[mapLayerIndex]);
+    mapLayerIndex = parseInt($(this).find(':selected').val());
+    tilesLayer[mapLayerIndex].addTo(map);
   });
 
   function drawMap(jsonName) {
@@ -167,7 +182,7 @@ $(function() {
             const latOrder = parseFloat(order.latitud_order);
             const lonOrder = parseFloat(order.longitud_order);
             
-            const distPdvOrder = L.latLng(latPdv, lonPdv).distanceTo(L.latLng(latOrder, lonOrder)).toFixed(2) / 1000;
+            const distPdvOrder = roundTwoDec(L.latLng(latPdv, lonPdv).distanceTo(L.latLng(latOrder, lonOrder)) / 1000);
 
             minLat = latPdv > minLat ? latPdv : minLat;
             minLon = lonPdv > minLon ? lonPdv : minLon;
@@ -195,16 +210,35 @@ $(function() {
             const desc = `<h5>${order.nombre_pdv}</h5>
               <p>${ moment(order.date).format('DD/MM/YYYY, hh:mm')} ${ order.nosalereason }</p><p>Total: $${order.total}</p>
               <p>Distancia: <a href="#">${distPdvOrder} Km</a></p>
-              <p>[${[latPdv, lonPdv]}]</p>`;
+              <p>Lat Pdv: ${latPdv}, Lon Pdv: ${lonPdv}</p>`;
 
-            const icon = L.icon({
+            const iconPdv = L.icon({
               iconUrl,
-              iconAnchor: [18, 35]
+              iconAnchor: [22, 38],
+              popupAnchor: [0, -38]
             });
 
-            const marker = L.marker([latPdv, lonPdv], { icon });
-            marker.bindPopup(desc);
-            markers.push(marker);
+            const markerPdv = L.marker([latPdv, lonPdv], { icon: iconPdv });
+            markerPdv.bindPopup(desc);
+            markers.push(markerPdv);
+
+            if(distPdvOrder > 0) {
+              
+              const iconOrder = L.icon({
+                iconUrl: './img/seller.svg',
+                iconAnchor: [16, 29]
+              });
+
+              const markerOrder = L.marker([latOrder, lonOrder], { icon: iconOrder });
+              markers.push(markerOrder);
+
+              const linePdvOrder = [
+                [latPdv, lonPdv],
+                [latOrder, lonOrder]
+              ];
+
+              lines.push(L.polyline(linePdvOrder, { color: '#e53935', weight: 5 }));
+            }
           
           } else {
 
@@ -228,19 +262,33 @@ $(function() {
         $geo.text(countGeo);
         $wgeo.text(orders.length - countGeo);
 
-        layer = L.layerGroup(markers);
-        layer.addTo(map);
+        layerIcons = L.layerGroup(markers);
+        layerIcons.addTo(map);
+
+        layerLines = L.layerGroup(lines);
+        layerLines.addTo(map);
 
         const distMaxMin = L.latLng(maxLat, maxLon).distanceTo(L.latLng(minLat, minLon));
 
         zoom = distMaxMin > 10000 ? 12 : 15;
         
         map.setView([(maxLat + minLat) / 2, (maxLon + minLon) / 2], zoom);
+
+        map.on('click', function(e){
+          var coord = e.latlng;
+          var lat = coord.lat;
+          var lng = coord.lng;
+          console.log(lat + ", " + lng);
+        });
         
     }).fail((jqxhr, textStatus, error) => {
       const err = textStatus + ", " + error;
       console.log("Request Failed: " + err);
     });
+  }
+
+  function roundTwoDec(num){
+    return Math.round(num * 100) / 100;
   }
 });
 </script>
