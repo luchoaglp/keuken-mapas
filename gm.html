@@ -194,7 +194,6 @@ $(function() {
   $mapSelect.change(function() {
     const mapTypeId = $(this).find(':selected').val();
     map.setMapTypeId(mapTypeId);
-    drawMap(mapTypeId);
   });
 
   function drawMap(jsonName) {
