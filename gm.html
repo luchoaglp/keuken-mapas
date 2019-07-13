@@ -109,6 +109,7 @@ let map;
 let zoom = 15;
 let center = { lat: 0, lon: 0 };
 let markers = [];
+let lines = [];
 
 function initMap() {
 
@@ -122,9 +123,17 @@ function initMap() {
 
       markers.forEach(marker => {
 
+        let point;
+
+        if(marker.type === 'pdv') {
+          point = new google.maps.Point(22, 38);
+        } else if(marker.type === 'order') {
+          point = new google.maps.Point(16, 29);
+        }
+
         const image = {
           url: marker.iconUrl,
-          anchor: new google.maps.Point(22, 38)
+          anchor: point
         };
 
         const infowindow = new google.maps.InfoWindow({
@@ -142,6 +151,14 @@ function initMap() {
         });
 
       });
+        
+      const path = new google.maps.Polyline({
+        path: lines[0],
+        strokeColor: '#e53935',
+        strokeWeight: 5
+      });
+
+      path.setMap(map);
     }
   }
 
@@ -169,13 +186,15 @@ $(function() {
 
   $jsonSelect.change(function() {
     markers = [];
+    lines = [];
     $headerStats.text($(this).find('option:selected').text());
     drawMap($(this).find('option:selected').val());
   });
 
   $mapSelect.change(function() {
-    map.setMapTypeId($(this).find(':selected').val());
-    drawMap($jsonSelect.find(':selected').val());
+    const mapTypeId = $(this).find(':selected').val();
+    map.setMapTypeId(mapTypeId);
+    drawMap(mapTypeId);
   });
 
   function drawMap(jsonName) {
@@ -205,10 +224,10 @@ $(function() {
             const latOrder = parseFloat(order.latitud_order);
             const lonOrder = parseFloat(order.longitud_order);
                        
-            const distPdvOrder = google.maps.geometry.spherical.computeDistanceBetween(
+            const distPdvOrder = roundTwoDec(google.maps.geometry.spherical.computeDistanceBetween(
               new google.maps.LatLng(latPdv, lonPdv), 
               new google.maps.LatLng(latOrder, lonOrder)
-            ).toFixed(2) / 1000;
+            ) / 1000);
 
             minLat = latPdv > minLat ? latPdv : minLat;
             minLon = lonPdv > minLon ? lonPdv : minLon;
@@ -238,13 +257,32 @@ $(function() {
               <p>Distancia: <a href="#">${distPdvOrder} Km</a></p>
               <p>[${[latPdv, lonPdv]}]</p>`;
 
-            const marker = { position: 
-              { lat: latPdv, lng: lonPdv },
+            const markerPdv = { 
+              type: 'pdv',
+              position: { lat: latPdv, lng: lonPdv },
               iconUrl,
               desc
             };
 
-            markers.push(marker);
+            markers.push(markerPdv);
+
+            if(distPdvOrder > 0) {
+
+              const markerOrder = { 
+                type: 'order',
+                position: { lat: latOrder, lng: lonOrder },
+                iconUrl: './img/seller.svg'
+              };
+
+              markers.push(markerOrder);
+
+              const linePdvOrder = [
+                { lat: latPdv, lng: lonPdv},
+                { lat: latOrder, lng: lonOrder}
+              ];
+
+              lines.push(linePdvOrder);
+            }
           
           } else {
 
@@ -279,6 +317,10 @@ $(function() {
 
         initMap();
       });
+  }
+
+  function roundTwoDec(num){
+    return Math.round(num * 100) / 100;
   }
 
 });
