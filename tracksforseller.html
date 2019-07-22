@@ -105,154 +105,162 @@
 <script>
 $(function() {
 
-const params = new URLSearchParams(window.location.search);
+  const params = new URLSearchParams(window.location.search);
 
-if(params.has('enterprise')) {
+  if(params.has('enterprise')) {
 
-    $('.mdb-select').materialSelect();
+    // $.getJSON(`http://keu.webhop.org:8991/getusersforenterprise?enterprise=${enterprise}&tracking=1`, { })
+    $.getJSON(`./js/sellers.json`, { })
+        .done(function(data) {
 
-    Date.prototype.toDateInputValue = (function() {
-        var local = new Date(this);
-        local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
-        return local.toJSON().slice(0, 10);
-    });
+            sellers = data;
 
-    const today = new Date().toDateInputValue();
+            $('.mdb-select').materialSelect();
 
-    $from = $('#from');
-    $to = $('#to');
-    $sellerSelect = $('#seller-select');
-    $mapSelect = $('#map-select');
-    $btnSubmit = $('#btn-submit');
-    $seller = $('#seller');
-    $fromSelected = $('#from-selected');
-    $toSelected = $('#to-selected');
-    let from;
-    let to;
-    let seller;
-    let sellerName;
+            Date.prototype.toDateInputValue = (function() {
+                var local = new Date(this);
+                local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
+                return local.toJSON().slice(0, 10);
+            });
 
-    let mapLayerIndex = 0;
-    const zoom = 20;
-    const map = L.map('map');
+            const today = new Date().toDateInputValue();
 
-    tilesLayer[mapLayerIndex].addTo(map);
+            $from = $('#from');
+            $to = $('#to');
+            $sellerSelect = $('#seller-select');
+            $mapSelect = $('#map-select');
+            $btnSubmit = $('#btn-submit');
+            $seller = $('#seller');
+            $fromSelected = $('#from-selected');
+            $toSelected = $('#to-selected');
+            let from;
+            let to;
+            let seller;
+            let sellerName;
 
-    $from.val(today);
-    $to.val(today);
+            let mapLayerIndex = 0;
+            const zoom = 20;
+            const map = L.map('map');
 
-    let layerIcons;
-    let markers = [];
-    
-    const enterprise = parseInt(params.get('enterprise'));
+            tilesLayer[mapLayerIndex].addTo(map);
 
-    sellers.forEach(seller => {
-        $sellerSelect.append(`<option value="${seller.id}">${seller.name}</option>`);
-    });
+            $from.val(today);
+            $to.val(today);
 
-    function reset() {
-        markers = [];
-        if(layerIcons) {
-          map.removeLayer(layerIcons);
-        }
-    }
-
-    $from.change(function() {
-        reset();
-        from = $(this).val();
-        $fromSelected.text(from);
-    });
-
-    $to.change(function() {
-        reset();
-        to = $(this).val();
-        $toSelected.text(to);
-    });
-
-    $sellerSelect.change(function() {
-        reset();
-        const $sellerSelected = $sellerSelect.find(':selected');
-        seller = $sellerSelected.val();
-        sellerName = $sellerSelected.text();
-        $seller.text(sellerName);
-    });
-
-    $mapSelect.change(function() {
-        map.removeLayer(tilesLayer[mapLayerIndex]);
-        mapLayerIndex = parseInt($(this).find(':selected').val());
-        tilesLayer[mapLayerIndex].addTo(map);
-    });
-
-    $btnSubmit.click(function() {
-        
-        seller = $sellerSelect.val();
-        
-        if(seller !== null) {
+            let layerIcons;
+            let markers = [];
             
-            // $.getJSON(`http://keu.webhop.org:8991/gettracksforseller?enterprise=${enterprise}&seller=${seller}&fromdate=${from}&untildate=${to}`, { })
-            $.getJSON(`./js/seller105.json`, { })
+            const enterprise = parseInt(params.get('enterprise'));
 
-                .done(tracks => { 
+            sellers.forEach(seller => {
+                $sellerSelect.append(`<option value="${seller.id}">${seller.name}</option>`);
+            });
 
-                    let minLat = -Infinity;
-                    let minLon = -Infinity;
-                    let maxLat = Infinity;
-                    let maxLon = Infinity;
+            function reset() {
+                markers = [];
+                if(layerIcons) {
+                  map.removeLayer(layerIcons);
+                }
+            }
 
-                    tracks.forEach(track => {
+            $from.change(function() {
+                reset();
+                from = $(this).val();
+                $fromSelected.text(from);
+            });
 
-                        const latOrder = parseFloat(track.latitud_order);
-                        const lonOrder = parseFloat(track.longitud_order);
+            $to.change(function() {
+                reset();
+                to = $(this).val();
+                $toSelected.text(to);
+            });
 
-                        minLat = latOrder > minLat ? latOrder : minLat;
-                        minLon = lonOrder > minLon ? lonOrder : minLon;
-                        maxLat = latOrder < maxLat ? latOrder : maxLat;
-                        maxLon = lonOrder < maxLon ? lonOrder : maxLon;
+            $sellerSelect.change(function() {
+                reset();
+                const $sellerSelected = $sellerSelect.find(':selected');
+                seller = $sellerSelected.val();
+                sellerName = $sellerSelected.text();
+                $seller.text(sellerName);
+            });
 
-                        const iconOrder = L.icon({
-                            iconUrl: './img/redMarker.svg',
-                            iconSize: [25, 25],
-                            iconAnchor: [13, 20],
-                            popupAnchor: [0, -29]
+            $mapSelect.change(function() {
+                map.removeLayer(tilesLayer[mapLayerIndex]);
+                mapLayerIndex = parseInt($(this).find(':selected').val());
+                tilesLayer[mapLayerIndex].addTo(map);
+            });
+
+            $btnSubmit.click(function() {
+                
+                seller = $sellerSelect.val();
+                
+                if(seller !== null) {
+                    
+                    // $.getJSON(`http://keu.webhop.org:8991/gettracksforseller?enterprise=${enterprise}&seller=${seller}&fromdate=${from}&untildate=${to}`, { })
+                    $.getJSON(`./js/seller105.json`, { })
+
+                        .done(tracks => { 
+
+                            let minLat = -Infinity;
+                            let minLon = -Infinity;
+                            let maxLat = Infinity;
+                            let maxLon = Infinity;
+
+                            tracks.forEach(track => {
+
+                                const latOrder = parseFloat(track.latitud_order);
+                                const lonOrder = parseFloat(track.longitud_order);
+
+                                minLat = latOrder > minLat ? latOrder : minLat;
+                                minLon = lonOrder > minLon ? lonOrder : minLon;
+                                maxLat = latOrder < maxLat ? latOrder : maxLat;
+                                maxLon = lonOrder < maxLon ? lonOrder : maxLon;
+
+                                const iconOrder = L.icon({
+                                    iconUrl: './img/redMarker.svg',
+                                    iconSize: [25, 25],
+                                    iconAnchor: [13, 20],
+                                    popupAnchor: [0, -29]
+                                });
+
+                                const desc = `<h5></h5>
+                                    <p>${ moment(track.date).format('DD/MM/YYYY, hh:mm:ss')} 
+                                    <p>Lat: ${latOrder}, Lon: ${lonOrder}</p>`;
+
+                                const markerOrder = L.marker([latOrder, lonOrder], { icon: iconOrder });
+                                markerOrder.bindPopup(desc);
+                                markers.push(markerOrder);
+                            });
+
+                            layerIcons = L.layerGroup(markers);
+                            layerIcons.addTo(map);
+
+                            const distMaxMin = L.latLng(maxLat, maxLon).distanceTo(L.latLng(minLat, minLon));
+                            
+                            map.setView([(maxLat + minLat) / 2, (maxLon + minLon) / 2], zoom);
+                        
+                        })
+                        .fail((jqxhr, textStatus, error) => {
+                            const err = textStatus + ", " + error;
+                            console.log("Request Failed: " + err);
                         });
 
-                        const desc = `<h5></h5>
-                            <p>${ moment(track.date).format('DD/MM/YYYY, hh:mm:ss')} 
-                            <p>Lat: ${latOrder}, Lon: ${lonOrder}</p>`;
+                        /*
+                        map.on('click', function(e){
+                            var coord = e.latlng;
+                            var lat = coord.lat;
+                            var lng = coord.lng;
+                            console.log(lat + ", " + lng);
+                        });
+                        */
+                }
+            });
 
-                        const markerOrder = L.marker([latOrder, lonOrder], { icon: iconOrder });
-                        markerOrder.bindPopup(desc);
-                        markers.push(markerOrder);
-                    });
-
-                    layerIcons = L.layerGroup(markers);
-                    layerIcons.addTo(map);
-
-                    const distMaxMin = L.latLng(maxLat, maxLon).distanceTo(L.latLng(minLat, minLon));
-                    
-                    map.setView([(maxLat + minLat) / 2, (maxLon + minLon) / 2], zoom);
-                
-                })
-                .fail((jqxhr, textStatus, error) => {
-                    const err = textStatus + ", " + error;
-                    console.log("Request Failed: " + err);
-                });
-
-                /*
-                map.on('click', function(e){
-                    var coord = e.latlng;
-                    var lat = coord.lat;
-                    var lng = coord.lng;
-                    console.log(lat + ", " + lng);
-                });
-                */
-
-        }
+    }).fail((jqxhr, textStatus, error) => {
+        const err = textStatus + ", " + error;
+        console.log("Request Failed: " + err);
     });
 
-}
-
-
+  }
 });
 </script>
 </body>
