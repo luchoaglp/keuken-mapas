@@ -42,13 +42,13 @@
         </div>
       </div>
       <div class="col-md-3">
-        <label for="to">Vendedor</label>
+        <label for="seller-select">Vendedor</label>
         <select class="mdb-select md-form" id="seller-select">
           <option value="" disabled selected>Seleccionar vendedor</option>
         </select>
       </div>
       <div class="col-md-3">
-        <label for="to">Tipo de mapa</label>
+        <label for="map-select">Tipo de mapa</label>
         <select class="mdb-select md-form" id="map-select">
           <option value="" disabled selected>Seleccionar mapa</option>
           <option value="0">OpenStreetMap Mapnick</option>
@@ -81,6 +81,9 @@
               <li class="list-group-item d-flex justify-content-between align-items-center">
                   Hasta: <span id="to-selected"></span>
               </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Cantidad: <span id="quantity"></span>
+            </li>
             </ul>
           </div>
         </div>
@@ -98,7 +101,6 @@
 <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
   integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
   crossorigin=""></script>
-<script src="js/usersforenterprise.js"></script>
 <script src="js/tilesLayer.js"></script>
 <script src="js/moment.min.js"></script>
 
@@ -109,8 +111,10 @@ $(function() {
 
   if(params.has('enterprise')) {
 
-    // $.getJSON(`http://keu.webhop.org:8991/getusersforenterprise?enterprise=${enterprise}&tracking=1`, { })
-    $.getJSON(`./js/sellers.json`, { })
+    const enterprise = parseInt(params.get('enterprise'));
+
+    $.getJSON(`http://keu.webhop.org:8991/getusersforenterprise?enterprise=${enterprise}&tracking=1`, { })
+    // $.getJSON(`./js/sellers.json`, { })
         .done(function(data) {
 
             sellers = data;
@@ -133,13 +137,14 @@ $(function() {
             $seller = $('#seller');
             $fromSelected = $('#from-selected');
             $toSelected = $('#to-selected');
-            let from;
-            let to;
+            $quantity = $('#quantity');
+            let from = today;
+            let to = today;
             let seller;
             let sellerName;
 
             let mapLayerIndex = 0;
-            const zoom = 20;
+            const zoom = 14;
             const map = L.map('map');
 
             tilesLayer[mapLayerIndex].addTo(map);
@@ -147,10 +152,11 @@ $(function() {
             $from.val(today);
             $to.val(today);
 
+            $fromSelected.text(today);
+            $toSelected.text(today);
+
             let layerIcons;
             let markers = [];
-            
-            const enterprise = parseInt(params.get('enterprise'));
 
             sellers.forEach(seller => {
                 $sellerSelect.append(`<option value="${seller.id}">${seller.name}</option>`);
@@ -164,19 +170,16 @@ $(function() {
             }
 
             $from.change(function() {
-                reset();
                 from = $(this).val();
                 $fromSelected.text(from);
             });
 
             $to.change(function() {
-                reset();
                 to = $(this).val();
                 $toSelected.text(to);
             });
 
-            $sellerSelect.change(function() {
-                reset();
+            $sellerSelect.change(function() {;
                 const $sellerSelected = $sellerSelect.find(':selected');
                 seller = $sellerSelected.val();
                 sellerName = $sellerSelected.text();
@@ -190,15 +193,21 @@ $(function() {
             });
 
             $btnSubmit.click(function() {
+
+                reset();
                 
                 seller = $sellerSelect.val();
                 
                 if(seller !== null) {
                     
-                    // $.getJSON(`http://keu.webhop.org:8991/gettracksforseller?enterprise=${enterprise}&seller=${seller}&fromdate=${from}&untildate=${to}`, { })
-                    $.getJSON(`./js/seller105.json`, { })
+                    $.getJSON(`http://keu.webhop.org:8991/gettracksforseller?enterprise=${enterprise}&seller=${seller}&fromdate=${from}&untildate=${to}`, { })
+                    // $.getJSON(`./js/seller105.json`, { })
 
-                        .done(tracks => { 
+                        .done(tracks => {
+
+                          $quantity.text(tracks.length);
+
+                          if(tracks.length > 0) {
 
                             let minLat = -Infinity;
                             let minLon = -Infinity;
@@ -216,18 +225,19 @@ $(function() {
                                 maxLon = lonOrder < maxLon ? lonOrder : maxLon;
 
                                 const iconOrder = L.icon({
-                                    iconUrl: './img/redMarker.svg',
-                                    iconSize: [25, 25],
-                                    iconAnchor: [13, 20],
-                                    popupAnchor: [0, -29]
+                                    iconUrl: './img/circle.svg',
+                                    iconSize: [10, 10],
+                                    iconAnchor: [0, 0],
+                                    popupAnchor: [0, 0]
                                 });
 
+                                /*
                                 const desc = `<h5></h5>
-                                    <p>${ moment(track.date).format('DD/MM/YYYY, hh:mm:ss')} 
-                                    <p>Lat: ${latOrder}, Lon: ${lonOrder}</p>`;
+                                    <p>${ moment(track.date).format('DD/MM/YYYY, hh:mm:ss')}`;
+                                */
 
                                 const markerOrder = L.marker([latOrder, lonOrder], { icon: iconOrder });
-                                markerOrder.bindPopup(desc);
+                                //markerOrder.bindPopup(desc);
                                 markers.push(markerOrder);
                             });
 
@@ -237,7 +247,7 @@ $(function() {
                             const distMaxMin = L.latLng(maxLat, maxLon).distanceTo(L.latLng(minLat, minLon));
                             
                             map.setView([(maxLat + minLat) / 2, (maxLon + minLon) / 2], zoom);
-                        
+                          }
                         })
                         .fail((jqxhr, textStatus, error) => {
                             const err = textStatus + ", " + error;
