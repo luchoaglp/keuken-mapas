@@ -247,12 +247,12 @@ $(function() {
                       // const markerOrder = L.marker([latOrder, lonOrder], { icon: iconOrder });
                       // markerOrder.bindPopup(desc);
 
-                      const markerOrder = L.circleMarker([latOrder, lonOrder], {
+                      markers.push(L.circleMarker([latOrder, lonOrder], {
                         radius: 2,
                         color: '#FF0000'
-                      });
+                      }));
 
-                      markers.push(markerOrder);
+                      //markers.push(markerOrder);
                     });
 
                     layerIcons = L.layerGroup(markers);
