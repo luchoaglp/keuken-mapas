@@ -99,10 +99,12 @@ $(function() {
   
           if(tracks.length > 0) {
   
+            /*
             let minLat = -Infinity;
             let minLon = -Infinity;
             let maxLat = Infinity;
             let maxLon = Infinity;
+            */
   
             /*
             const iconOrder = L.icon({
@@ -112,16 +114,21 @@ $(function() {
               popupAnchor: [0, 0]
             });
             */
+
+            let firstLatOrder = tracks[0].latitud_order;
+            let firstLonOrder = tracks[0].longitud_order;
   
             tracks.forEach(track => {
   
               const latOrder = parseFloat(track.latitud_order);
               const lonOrder = parseFloat(track.longitud_order);
   
+              /*
               minLat = latOrder > minLat ? latOrder : minLat;
               minLon = lonOrder > minLon ? lonOrder : minLon;
               maxLat = latOrder < maxLat ? latOrder : maxLat;
               maxLon = lonOrder < maxLon ? lonOrder : maxLon;
+              */
   
               /*
               const desc = `<h5></h5>
@@ -142,9 +149,11 @@ $(function() {
             layerIcons = L.layerGroup(markers);
             layerIcons.addTo(map);
   
-            const distMaxMin = L.latLng(maxLat, maxLon).distanceTo(L.latLng(minLat, minLon));
+            // const distMaxMin = L.latLng(maxLat, maxLon).distanceTo(L.latLng(minLat, minLon));
                               
-            map.setView([(maxLat + minLat) / 2, (maxLon + minLon) / 2], zoom);
+            // map.setView([(maxLat + minLat) / 2, (maxLon + minLon) / 2], zoom);
+
+            map.setView([firstLatOrder, firstLonOrder], zoom);
           }
   
         })

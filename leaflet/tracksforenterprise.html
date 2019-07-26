@@ -4,16 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Coordenadas por vendedor</title>
+    <title>Coordenadas por empresa</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
   integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
   crossorigin="" rel="stylesheet"/>
     <!-- Font Awesome -->
     <link href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" rel="stylesheet">
     <!-- Bootstrap core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
     <!-- Material Design Bootstrap -->
-    <link href="css/mdb.min.css" rel="stylesheet">
+    <link href="../css/mdb.min.css" rel="stylesheet">
     <style>
         #map {
             height: 500px;
@@ -23,29 +23,23 @@
 <body>
 
   <nav class="navbar navbar-expand-lg navbar-dark primary-color mb-3">
-      <a class="navbar-brand" href="./">Coordenadas para un vendedor específico</a>
+      <a class="navbar-brand" href="./">Coordenadas para una empresa específica</a>
   </nav>
 
   <div class="container-fluid">
     
     <div class="row">
-      <div class="col-md-2">
+      <div class="col-md-3">
         <div class="form-group">
           <label for="from">Desde</label>
           <input type="date" id="from" class="form-control">
         </div>
       </div>
-      <div class="col-md-2">
+      <div class="col-md-3">
         <div class="form-group">
           <label for="to">Hasta</label>
           <input type="date" id="to" class="form-control">
         </div>
-      </div>
-      <div class="col-md-3">
-        <label for="seller-select">Vendedor</label>
-        <select class="mdb-select md-form" id="seller-select">
-          <option value="" disabled selected>Seleccionar vendedor</option>
-        </select>
       </div>
       <div class="col-md-3">
         <label for="map-select">Tipo de mapa</label>
@@ -55,7 +49,7 @@
           <option value="1">Esri WorldImagery</option>
         </select>
       </div>
-      <div class="col-md-2"><br>
+      <div class="col-md-3"><br>
         <button type="button" id="btn-submit" class="btn btn-primary">Consultar</button>
       </div>
     </div>
@@ -72,9 +66,6 @@
         <div class="card">
           <div class="card-body">
             <ul class="list-group">
-              <li class="list-group-item d-flex justify-content-between align-items-center">
-                  Vendedor: <span id="seller"></span>
-              </li>
               <li class="list-group-item d-flex justify-content-between align-items-center">
                   Desde: <span id="from-selected"></span>
               </li>
@@ -93,17 +84,17 @@
 
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <!-- Bootstrap tooltips -->
-<script src="js/popper.min.js"></script>
+<script src="../js/popper.min.js"></script>
 <!-- Bootstrap core JavaScript -->
-<script src="js/bootstrap.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
 <!-- MDB core JavaScript -->
-<script src="js/mdb.min.js"></script>
+<script src="../js/mdb.min.js"></script>
 <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
   integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
   crossorigin=""></script>
-<script src="js/tilesLayer.js"></script>
-<script src="js/moment.min.js"></script>
-<script src="js/tracksforseller.js?0.0.1"></script>
+<script src="./js/tilesLayer.js"></script>
+<script src="../js/moment.min.js"></script>
+<script src="./js/tracksforenterprise.js"></script>
 
 </body>
 </html>
