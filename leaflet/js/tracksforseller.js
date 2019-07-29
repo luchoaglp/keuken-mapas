@@ -1,8 +1,16 @@
 $(function() {
 
+  $('.mdb-select').materialSelect();
+
   const params = new URLSearchParams(window.location.search);
   
   if(params.has('enterprise')) {
+
+    const map = L.map('map', {
+      center: [-34.603722, -58.381592],
+      zoom: 12,
+      preferCanvas: true
+    });
   
     const enterprise = parseInt(params.get('enterprise'));
   
@@ -11,8 +19,6 @@ $(function() {
       .done(function(data) {
   
         sellers = data;
-  
-        $('.mdb-select').materialSelect();
   
         Date.prototype.toDateInputValue = (function() {
           let local = new Date(this);
@@ -27,36 +33,54 @@ $(function() {
         $sellerSelect = $('#seller-select');
         $mapSelect = $('#map-select');
         $btnSubmit = $('#btn-submit');
-        $seller = $('#seller');
-        $fromSelected = $('#from-selected');
-        $toSelected = $('#to-selected');
+        // $seller = $('#seller');
+        // $fromSelected = $('#from-selected');
+        // $toSelected = $('#to-selected');
         $quantity = $('#quantity');
         let from = today;
         let to = today;
         let seller;
-        let sellerName;
+        // let sellerName;
   
         let mapLayerIndex = 0;
         const zoom = 14;
-  
-        const map = L.map('map', {
-          preferCanvas: true
-        });
   
         tilesLayer[mapLayerIndex].addTo(map);
   
         $from.val(today);
         $to.val(today);
   
-        $fromSelected.text(today);
-        $toSelected.text(today);
+        // $fromSelected.text(today);
+        // $toSelected.text(today);
   
         let layerIcons;
         let markers = [];
+
+        let supervisors = new Map();
   
         sellers.forEach(seller => {
-          $sellerSelect.append(`<option value="${seller.id}">${seller.name}</option>`);
+
+          if(supervisors.has(seller.supervisor)) {
+            supervisors.set(seller.supervisor,
+              [...supervisors.get(seller.supervisor), seller ]
+            );
+          } else {
+            supervisors.set(seller.supervisor, [ seller ]);
+          }
+          //sellerSelectHtml += `<option value="${seller.id}">${seller.name}</option>`;
         });
+
+        let sellerSelectHtml = '';
+
+        for(const [key, value] of supervisors.entries()) {
+          sellerSelectHtml += `<option value="#" disabled selected>${key}</option>`;
+          value.forEach(seller => {
+            sellerSelectHtml += `<option value="${seller.id}">${seller.name}</option>`;
+          });
+          sellerSelectHtml += `<option value="#" disabled selected><hr></option>`;
+        };
+
+        $sellerSelect.html(sellerSelectHtml);
   
         function reset() {
           markers = [];
@@ -67,19 +91,19 @@ $(function() {
   
         $from.change(function() {
           from = $(this).val();
-          $fromSelected.text(from);
+          // $fromSelected.text(from);
         });
   
         $to.change(function() {
           to = $(this).val();
-          $toSelected.text(to);
+          // $toSelected.text(to);
         });
   
         $sellerSelect.change(function() {;
           const $sellerSelected = $sellerSelect.find(':selected');
           seller = $sellerSelected.val();
-          sellerName = $sellerSelected.text();
-          $seller.text(sellerName);
+          // sellerName = $sellerSelected.text();
+          // $seller.text(sellerName);
         });
   
         $mapSelect.change(function() {
@@ -105,12 +129,10 @@ $(function() {
   
                 if(tracks.length > 0) {
   
-                  /*
                   let minLat = -Infinity;
                   let minLon = -Infinity;
                   let maxLat = Infinity;
                   let maxLon = Infinity;
-                  */
   
                   /*
                   const iconOrder = L.icon({
@@ -129,12 +151,10 @@ $(function() {
                     const latOrder = parseFloat(track.latitud_order);
                     const lonOrder = parseFloat(track.longitud_order);
   
-                    /*
                     minLat = latOrder > minLat ? latOrder : minLat;
                     minLon = lonOrder > minLon ? lonOrder : minLon;
                     maxLat = latOrder < maxLat ? latOrder : maxLat;
                     maxLon = lonOrder < maxLon ? lonOrder : maxLon;
-                    */
   
                     /*
                     const desc = `<h5></h5>
@@ -157,8 +177,8 @@ $(function() {
   
                   // const distMaxMin = L.latLng(maxLat, maxLon).distanceTo(L.latLng(minLat, minLon));
                               
-                  // map.setView([(maxLat + minLat) / 2, (maxLon + minLon) / 2], zoom);
-                  map.setView([firstLatOrder, firstLonOrder], zoom);
+                  map.setView([(maxLat + minLat) / 2, (maxLon + minLon) / 2], zoom);
+                  // map.setView([firstLatOrder, firstLonOrder], zoom);
                 }
   
               }).fail((jqxhr, textStatus, error) => {
