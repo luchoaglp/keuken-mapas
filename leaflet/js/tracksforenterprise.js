@@ -1,13 +1,39 @@
 $(function() {
 
+  $('.mdb-select').materialSelect();
+
   const params = new URLSearchParams(window.location.search);
   
   if(params.has('enterprise')) {
+
+    const map = L.map('map', {
+      center: [-34.603722, -58.381592],
+      zoom: 12,
+      preferCanvas: true
+    });
   
     const enterprise = parseInt(params.get('enterprise'));
+
+    const colors = ['#FF0000', '#00C851', '#33b5e5', '#aa66cc', '#00695c', '#3F729B'];
+
+    let colorSeller = new Map();
+
+    $.getJSON(`http://keu.webhop.org:8991/getusersforenterprise?enterprise=${enterprise}&tracking=1`, { })
+      .done(function(data) {
+
+        const sellers = data;
+
+        let colorIdx = 0;
   
-    $('.mdb-select').materialSelect();
-  
+        sellers.forEach(seller => {
+          colorSeller.set(seller.id, colors[colorIdx++]);
+        });
+
+      }).fail((jqxhr, textStatus, error) => {
+        const err = textStatus + ", " + error;
+        console.log("Request Failed: " + err);
+      });
+    
     Date.prototype.toDateInputValue = (function() {
       let local = new Date(this);
       local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
@@ -16,43 +42,29 @@ $(function() {
   
     const today = new Date().toDateInputValue();
   
-    $from = $('#from');
-    $to = $('#to');
-    $mapSelect = $('#map-select');
-    $btnSubmit = $('#btn-submit');
-    $seller = $('#seller');
-    $fromSelected = $('#from-selected');
-    $toSelected = $('#to-selected');
-    $quantity = $('#quantity');
+    const $from = $('#from');
+    const $to = $('#to');
+    const $mapSelect = $('#map-select');
+    const $btnSubmit = $('#btn-submit');
+    // $seller = $('#seller');
+    // $fromSelected = $('#from-selected');
+    // $toSelected = $('#to-selected');
+    // $quantity = $('#quantity');
     let from = today;
     let to = today;
-    let seller;
-    let sellerName;
+    // let seller;
+    // let sellerName;
   
     let mapLayerIndex = 0;
-    const zoom = 15;
-    //const map = L.map('map');
-  
-    const map = L.map('map', {
-      preferCanvas: true
-    });
+    const zoom = 12;
   
     tilesLayer[mapLayerIndex].addTo(map);
   
     $from.val(today);
     $to.val(today);
-  
-    $fromSelected.text(today);
-    $toSelected.text(today);
-  
+
     let layerIcons;
     let markers = [];
-  
-    /*
-    sellers.forEach(seller => {
-      $sellerSelect.append(`<option value="${seller.id}">${seller.name}</option>`);
-    });
-    */
   
     function reset() {
       markers = [];
@@ -63,22 +75,11 @@ $(function() {
   
     $from.change(function() {
       from = $(this).val();
-      $fromSelected.text(from);
     });
   
     $to.change(function() {
       to = $(this).val();
-      $toSelected.text(to);
     });
-  
-    /*
-    $sellerSelect.change(function() {;
-      const $sellerSelected = $sellerSelect.find(':selected');
-      seller = $sellerSelected.val();
-      sellerName = $sellerSelected.text();
-      $seller.text(sellerName);
-    });
-    */
   
     $mapSelect.change(function() {
       map.removeLayer(tilesLayer[mapLayerIndex]);
@@ -91,20 +92,18 @@ $(function() {
       reset();
                       
       $.getJSON(`http://keu.webhop.org:8991/gettracksforenterprise?enterprise=${enterprise}&fromdate=${from}&untildate=${to}`, { })
-      // $.getJSON(`./js/seller105.json`, { })
+      // $.getJSON(`./js/tracksforenterprise.json`, { })
   
         .done(tracks => {
   
-          $quantity.text(tracks.length);
+          // $quantity.text(tracks.length);
   
           if(tracks.length > 0) {
   
-            /*
             let minLat = -Infinity;
             let minLon = -Infinity;
             let maxLat = Infinity;
             let maxLon = Infinity;
-            */
   
             /*
             const iconOrder = L.icon({
@@ -115,20 +114,18 @@ $(function() {
             });
             */
 
-            let firstLatOrder = tracks[0].latitud_order;
-            let firstLonOrder = tracks[0].longitud_order;
+            // let firstLatOrder = tracks[0].latitud_order;
+            // let firstLonOrder = tracks[0].longitud_order;
   
             tracks.forEach(track => {
   
               const latOrder = parseFloat(track.latitud_order);
               const lonOrder = parseFloat(track.longitud_order);
   
-              /*
               minLat = latOrder > minLat ? latOrder : minLat;
               minLon = lonOrder > minLon ? lonOrder : minLon;
               maxLat = latOrder < maxLat ? latOrder : maxLat;
               maxLon = lonOrder < maxLon ? lonOrder : maxLon;
-              */
   
               /*
               const desc = `<h5></h5>
@@ -140,22 +137,16 @@ $(function() {
   
               markers.push(L.circleMarker([latOrder, lonOrder], {
                 radius: 2,
-                color: '#FF0000'
+                color: colorSeller.get(track.seller)
               }));
-  
-              //markers.push(markerOrder);
+                
             });
   
             layerIcons = L.layerGroup(markers);
-            layerIcons.addTo(map);
-  
-            // const distMaxMin = L.latLng(maxLat, maxLon).distanceTo(L.latLng(minLat, minLon));
-                              
-            // map.setView([(maxLat + minLat) / 2, (maxLon + minLon) / 2], zoom);
+            layerIcons.addTo(map);        
+            map.setView([(maxLat + minLat) / 2, (maxLon + minLon) / 2], zoom);
 
-            map.setView([firstLatOrder, firstLonOrder], zoom);
           }
-  
         })
         .fail((jqxhr, textStatus, error) => {
           const err = textStatus + ", " + error;

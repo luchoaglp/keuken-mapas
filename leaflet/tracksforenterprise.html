@@ -31,22 +31,21 @@
     <div class="row">
       <div class="col-md-3">
         <div class="form-group">
-          <label for="from">Desde</label>
+          <label for="from"><small>Desde</small></label>
           <input type="date" id="from" class="form-control">
         </div>
       </div>
       <div class="col-md-3">
         <div class="form-group">
-          <label for="to">Hasta</label>
+          <label for="to"><small>Hasta</small></label>
           <input type="date" id="to" class="form-control">
         </div>
       </div>
       <div class="col-md-3">
-        <label for="map-select">Tipo de mapa</label>
-        <select class="mdb-select md-form" id="map-select">
-          <option value="" disabled selected>Seleccionar mapa</option>
-          <option value="0">OpenStreetMap Mapnick</option>
-          <option value="1">Esri WorldImagery</option>
+        <label for="map-select"><small>Tipo de mapa</small></label>
+        <select class="mdb-select md-form colorful-select dropdown-info" id="map-select" searchable="Seleccionar mapa">
+            <option value="0">Normal</option>
+            <option value="1">Satélite</option>
         </select>
       </div>
       <div class="col-md-3"><br>
@@ -55,13 +54,14 @@
     </div>
     <hr>
     <div class="row mb-5">
-      <div class="col-md-8">
+      <div class="col-md-12">
         <div class="card">
           <div class="card-body">
             <div id="map"></div>
           </div>
         </div>
       </div>
+      <!--
       <div class="col-md-4">
         <div class="card">
           <div class="card-body">
@@ -79,6 +79,7 @@
           </div>
         </div>
       </div>
+      -->
     </div>
   </div>
 

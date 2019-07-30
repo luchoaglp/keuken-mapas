@@ -18,7 +18,7 @@ $(function() {
     // $.getJSON(`./js/sellers.json`, { })
       .done(function(data) {
   
-        sellers = data;
+        const sellers = data;
   
         Date.prototype.toDateInputValue = (function() {
           let local = new Date(this);
@@ -28,22 +28,22 @@ $(function() {
   
         const today = new Date().toDateInputValue();
   
-        $from = $('#from');
-        $to = $('#to');
-        $sellerSelect = $('#seller-select');
-        $mapSelect = $('#map-select');
-        $btnSubmit = $('#btn-submit');
+        const $from = $('#from');
+        const $to = $('#to');
+        const $sellerSelect = $('#seller-select');
+        const $mapSelect = $('#map-select');
+        const $btnSubmit = $('#btn-submit');
         // $seller = $('#seller');
         // $fromSelected = $('#from-selected');
         // $toSelected = $('#to-selected');
-        $quantity = $('#quantity');
+        // $quantity = $('#quantity');
         let from = today;
         let to = today;
         let seller;
         // let sellerName;
   
         let mapLayerIndex = 0;
-        const zoom = 14;
+        const zoom = 12;
   
         tilesLayer[mapLayerIndex].addTo(map);
   
@@ -125,7 +125,7 @@ $(function() {
   
               .done(tracks => {
   
-                $quantity.text(tracks.length);
+                // $quantity.text(tracks.length);
   
                 if(tracks.length > 0) {
   
@@ -143,8 +143,8 @@ $(function() {
                     });
                   */
 
-                  let firstLatOrder = tracks[0].latitud_order;
-                  let firstLonOrder = tracks[0].longitud_order;
+                  // let firstLatOrder = tracks[0].latitud_order;
+                  // let firstLonOrder = tracks[0].longitud_order;
   
                   tracks.forEach(track => {
   
