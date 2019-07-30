@@ -14,7 +14,9 @@ $(function() {
   
     const enterprise = parseInt(params.get('enterprise'));
 
-    const colors = ['#FF0000', '#00C851', '#33b5e5', '#aa66cc', '#00695c', '#3F729B'];
+    const colors = ['#FF0000', '#00C851', '#33b5e5', '#aa66cc', '#00695c', '#3F729B', '#FF8800'];
+
+    let sellersHtml = '';
 
     let colorSeller = new Map();
 
@@ -25,9 +27,19 @@ $(function() {
 
         let colorIdx = 0;
   
+        sellersHtml = '<ul class="list-group text-center">';
+
         sellers.forEach(seller => {
-          colorSeller.set(seller.id, colors[colorIdx++]);
+          if(!colorSeller.has(seller.id)) {
+            colorSeller.set(seller.id, colors[colorIdx]);
+            sellersHtml += `<li class="list-group-item">
+            <span class="badge" style="background: ${colors[colorIdx]}">${seller.name}</span> 
+            </li>`;
+            colorIdx++;
+          }
         });
+
+        sellersHtml += '</ul>';
 
       }).fail((jqxhr, textStatus, error) => {
         const err = textStatus + ", " + error;
@@ -92,14 +104,24 @@ $(function() {
       reset();
                       
       $.getJSON(`http://keu.webhop.org:8991/gettracksforenterprise?enterprise=${enterprise}&fromdate=${from}&untildate=${to}`, { })
-      // $.getJSON(`./js/tracksforenterprise.json`, { })
+      // $.getJSON(`./data/tracksforenterprise.json`, { })
   
         .done(tracks => {
   
           // $quantity.text(tracks.length);
   
           if(tracks.length > 0) {
-  
+
+            const sellersColors = L.control({position: 'bottomright'});
+            
+            sellersColors.onAdd = function (map) {
+              const div = L.DomUtil.create('div', 'Vendedores');
+              div.innerHTML = sellersHtml;
+              return div;
+            };
+            
+            sellersColors.addTo(map);
+
             let minLat = -Infinity;
             let minLon = -Infinity;
             let maxLat = Infinity;
