@@ -1,6 +1,6 @@
 $(function() {
 
-  $('.mdb-select').materialSelect();
+  $('.mdb-select').material_select();
 
   const params = new URLSearchParams(window.location.search);
   

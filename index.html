@@ -1,32 +1,28 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Demo Leaflets</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Vendedor Ruta</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
   integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
   crossorigin="" rel="stylesheet"/>
-    <!-- Font Awesome -->
-    <link href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" rel="stylesheet">
-    <!-- Bootstrap core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <!-- Material Design Bootstrap -->
-    <link href="css/mdb.min.css" rel="stylesheet">
-    <style>
-        #map {
-            height: 500px;
-        }
-        #header-stats {
-          background-color: #e3f2fd !important;
-        }
-    </style>
+  <!-- Font Awesome -->
+  <link href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" rel="stylesheet">
+  <!-- Bootstrap core CSS -->
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <!-- Material Design Bootstrap -->
+  <link href="css/mdb.min.css" rel="stylesheet">
+  <style>
+    #map { height: 500px; }
+    #header-stats { background-color: #e3f2fd !important; }
+  </style>
 </head>
 <body>
 
   <nav class="navbar navbar-expand-lg navbar-dark primary-color mb-2">
-      <a class="navbar-brand" href="./">Demo Leaflet</a>
+      <a class="navbar-brand" href="./">Ruta del vendedor</a>
   </nav>
 
   <div class="container-fluid">
@@ -34,23 +30,21 @@
     <div class="row">
       <div class="col-md-3">
         <div class="form-group">
-          <label for="from">From</label>
-          <input type="date" id="from" value="2019-07-02" class="form-control">
+          <label for="from"><small>From</small></label>
+          <input type="date" id="from" class="form-control">
         </div>
       </div>
       <div class="col-md-3">
         <div class="form-group">
-          <label for="to">To</label>
+          <label for="to"><small>To</small></label>
           <input type="date" id="to" value="2019-07-02" class="form-control">
         </div>
       </div>
       <div class="col-md-6">
-        <label for="to">Map Type</label>
-        <select class="mdb-select md-form" id="map-select">
-          <option value="" disabled selected>Select Map Type</option>
-          <option value="0">OpenStreetMap Mapnick</option>
-          <option value="1">Esri WorldImagery</option>
-          <option value="2">HikeBike</option>
+        <label for="map-select"><small>Tipo de mapa</small></label>
+        <select class="mdb-select md-form colorful-select dropdown-info" id="map-select" searchable="Seleccionar mapa">
+            <option value="0">Normal</option>
+            <option value="1">Satélite</option>
         </select>
       </div>
     </div>
@@ -132,11 +126,17 @@ $(function() {
   $to = $('#to');
   $mapSelect = $('#map-select');
 
+  let from = new Date('2019-07-02').toISOString().slice(0,10);
+  let to = new Date('2019-07-02').toISOString().slice(0,10);
+
   $headerStats.text('Ruta 425 (2019-07-02 - 2019-07-02)');
 
   let mapLayerIndex = 0;
 
   tilesLayer[mapLayerIndex].addTo(map);
+
+  $from.val(from);
+  $to.val(to);
 
   drawMap('ruta_425-2019.07.03.json');
 
@@ -145,14 +145,14 @@ $(function() {
   let markers = [];
   let lines = [];
 
-  function selectDates(from, to) {
+  function selectDates(fromArg, toArg) {
 
     let fileName;
 
-    let dateFromSelected = from.split('-');
+    let dateFromSelected = fromArg.split('-');
     dateSelected = parseInt(dateFromSelected[0]) + '-' + parseInt(dateFromSelected[1]) + '-' + parseInt(dateFromSelected[2]);
 
-    let dateToSelected = to.split('-');
+    let dateToSelected = toArg.split('-');
     dateToSelected = parseInt(dateToSelected[0]) + '-' + parseInt(dateToSelected[1]) + '-' + parseInt(dateToSelected[2]);
     
     let fromSelected = new Date(dateFromSelected);
@@ -178,11 +178,13 @@ $(function() {
   }
 
   $from.change(function() {
-    selectDates($(this).val(), $to.val());
+    from = $(this).val();
+    selectDates(from, to);
   });
 
   $to.change(function() {
-    selectDates($from.val(), $(this).val());
+    to = $(this).val();
+    selectDates(from, to);
   });
 
   $mapSelect.change(function() {
@@ -310,12 +312,14 @@ $(function() {
         
         map.setView([(maxLat + minLat) / 2, (maxLon + minLon) / 2], zoom);
 
+        /*
         map.on('click', function(e){
           var coord = e.latlng;
           var lat = coord.lat;
           var lng = coord.lng;
           console.log(lat + ", " + lng);
         });
+        */
         
     }).fail((jqxhr, textStatus, error) => {
       const err = textStatus + ", " + error;

@@ -18,6 +18,7 @@
         #map {
             height: 500px;
         }
+        /*
         .mdb-select .dropdown-content li.disabled > span { 
           background-color: #4285f4 !important;
           color: #fff;
@@ -29,12 +30,40 @@
           background-color: #4285f4 !important;
           color: #fff !important;
         }
+        */
     </style>
 </head>
 <body>
-
-  <nav class="navbar navbar-expand-lg navbar-dark primary-color mb-3">
-      <a class="navbar-brand" href="./">Coordenadas para un vendedor específico</a>
+    
+  <nav class="navbar navbar-expand-lg navbar-dark primary-color">
+    <a class="navbar-brand" href="./">Inicio</a>
+          
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#maps-nav" aria-controls="maps-nav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+          
+    <div class="collapse navbar-collapse" id="maps-nav">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" id="dropdown-seller" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Vendedor</a>
+          <div class="dropdown-menu dropdown-primary" aria-labelledby="dropdown-sellerMenuLink">
+            <a class="dropdown-item" href="./sellerroute.html?enterprise=10010033">Ruta</a>
+            <a class="dropdown-item" href="./tracksforseller.html?enterprise=10010033">Seguimiento</a>
+          </div>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" id="dropdown-enterprise" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Empresa</a>
+          <div class="dropdown-menu dropdown-primary" aria-labelledby="dropdown-enterpriseMenuLink">
+            <a class="dropdown-item" href="./tracksforenterprise.html?enterprise=10010033">Seguimiento</a>
+          </div>
+        </li>
+      </ul>
+      <ul class="navbar-nav my-0">
+        <li class="nav-item">
+          <span class="nav-link">Coordenadas por vendedor</span>
+        </li>
+      </ul>
+    </div>
   </nav>
 
   <div class="container-fluid">
@@ -52,14 +81,17 @@
           <input type="date" id="to" class="form-control">
         </div>
       </div>
-      <div class="col-md-3">
-        <label for="seller-select"><small>Distribuidor / Vendedor</small></label>
-        <!--<select class="mdb-select md-form colorful-select dropdown-primary" id="map-select" id="seller-select">-->
-        <select class="mdb-select md-form colorful-select dropdown-info" id="seller-select" searchable="Seleccionar vendedor">
-          <!--<option value="" disabled selected>Seleccionar vendedor</option>-->
+      <div class="col-md-2">
+        <label for="seller-select"><small>Distribuidor</small></label>
+        <select class="mdb-select colorful-select dropdown-info" id="supervisor-select" searchable="Seleccionar distribuidor">
         </select>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-2">
+          <label for="seller-select"><small>Vendedor</small></label>
+          <select class="mdb-select md-form colorful-select dropdown-info" id="seller-select" searchable="Seleccionar vendedor">
+          </select>
+        </div>
+      <div class="col-md-2">
         <label for="map-select"><small>Tipo de mapa</small></label>
         <select class="mdb-select md-form colorful-select dropdown-info" id="map-select" searchable="Seleccionar mapa">
         <!--<select class="mdb-select md-form" id="map-select">-->

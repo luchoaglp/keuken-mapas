@@ -1,7 +1,5 @@
 $(function() {
 
-  $('.mdb-select').materialSelect();
-
   const params = new URLSearchParams(window.location.search);
   
   if(params.has('enterprise')) {
@@ -11,6 +9,8 @@ $(function() {
       zoom: 12,
       preferCanvas: true
     });
+
+    tilesLayer[0].addTo(map);
   
     const enterprise = parseInt(params.get('enterprise'));
   
@@ -30,6 +30,7 @@ $(function() {
   
         const $from = $('#from');
         const $to = $('#to');
+        const $supervisorSelect = $('#supervisor-select');
         const $sellerSelect = $('#seller-select');
         const $mapSelect = $('#map-select');
         const $btnSubmit = $('#btn-submit');
@@ -45,8 +46,6 @@ $(function() {
         let mapLayerIndex = 0;
         const zoom = 12;
   
-        tilesLayer[mapLayerIndex].addTo(map);
-  
         $from.val(today);
         $to.val(today);
   
@@ -57,6 +56,8 @@ $(function() {
         let markers = [];
 
         let supervisors = new Map();
+
+        let supervisorSelectHtml = '';
   
         sellers.forEach(seller => {
 
@@ -65,13 +66,30 @@ $(function() {
               [...supervisors.get(seller.supervisor), seller ]
             );
           } else {
+            supervisorSelectHtml += `<option value="${seller.supervisor}">${seller.supervisor}</option>`;
             supervisors.set(seller.supervisor, [ seller ]);
           }
           //sellerSelectHtml += `<option value="${seller.id}">${seller.name}</option>`;
         });
 
-        let sellerSelectHtml = '';
+        $supervisorSelect.html(supervisorSelectHtml);
 
+        $sellerSelect.html(supervisorSelected(supervisors.keys().next().value));
+
+        function supervisorSelected(supervisor) {
+
+          let sellerSelectHtml = '';
+
+          supervisors.get(supervisor).forEach(seller => {
+            sellerSelectHtml += `<option value="${seller.id}">${seller.name}</option>`;
+          });
+          
+          return sellerSelectHtml;
+        }
+
+        //let sellerSelectHtml = '';
+
+        /*
         for(const [key, value] of supervisors.entries()) {
           sellerSelectHtml += `<option value="#" disabled selected>${key}</option>`;
           value.forEach(seller => {
@@ -79,14 +97,15 @@ $(function() {
           });
           sellerSelectHtml += `<option value="#" disabled selected><hr></option>`;
         };
+        */
 
-        $sellerSelect.html(sellerSelectHtml);
+        //$sellerSelect.html(sellerSelectHtml);
   
         function reset() {
           markers = [];
-            if(layerIcons) {
-              map.removeLayer(layerIcons);
-            }
+          if(layerIcons) {
+            map.removeLayer(layerIcons);
+          }
         }
   
         $from.change(function() {
@@ -98,8 +117,14 @@ $(function() {
           to = $(this).val();
           // $toSelected.text(to);
         });
+
+        $supervisorSelect.change(function() {
+          const $supervisorSelected = $(this).find(':selected');
+          supervisor = $supervisorSelected.val();
+          $sellerSelect.html(supervisorSelected(supervisor));
+        });
   
-        $sellerSelect.change(function() {;
+        $sellerSelect.change(function() {
           const $sellerSelected = $sellerSelect.find(':selected');
           seller = $sellerSelected.val();
           // sellerName = $sellerSelected.text();
@@ -111,6 +136,8 @@ $(function() {
           mapLayerIndex = parseInt($(this).find(':selected').val());
           tilesLayer[mapLayerIndex].addTo(map);
         });
+
+        $('.mdb-select').material_select();
   
         $btnSubmit.click(function() {
     
