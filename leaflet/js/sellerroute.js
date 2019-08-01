@@ -3,6 +3,13 @@ $(function() {
   const params = new URLSearchParams(window.location.search);
   
   if(params.has('enterprise')) {
+
+    const $canvasContainer = $('#canvas-container');
+    $canvasContainer.hide();
+
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+		ctx.canvas.height = 100;
     
     const map = L.map('map', {
       center: [-34.603722, -58.381592],
@@ -32,6 +39,7 @@ $(function() {
         const $rvn = $('#rvn');
         const $geo = $('#geo');
         const $wgeo = $('#wgeo');
+        const $total = $('#total');
         const $date = $('#date');
         const $supervisorSelect = $('#supervisor-select');
         const $sellerSelect = $('#seller-select');
@@ -50,6 +58,8 @@ $(function() {
         let layerLines;
         let markers = [];
         let lines = [];
+        let xLabels = [];
+        let chartData = [];
 
         let supervisors = new Map();
 
@@ -85,6 +95,8 @@ $(function() {
         function reset() {
           markers = [];
           lines = [];
+          xLabels = [];
+          chartData = [];
           if(layerIcons) {
             map.removeLayer(layerIcons);
           }
@@ -129,6 +141,8 @@ $(function() {
 
                 if(orders.length > 0) {
 
+                  $canvasContainer.show();
+
                   let minLat = -Infinity;
                   let minLon = -Infinity;
                   let maxLat = Infinity;
@@ -138,6 +152,7 @@ $(function() {
                   let mnv = 0;
                   let rvn = 0;
                   let countGeo = 0;
+                  let total = 0;
 
                   const iconOrder = L.icon({
                     iconUrl: '../img/seller.svg',
@@ -145,6 +160,9 @@ $(function() {
                   });
 
                   orders.forEach(order => {
+
+                    xLabels.push(moment(order.date).format('hh:mm:ss'));
+                    chartData.push(order.tipo_order);
 
                     if(order.latitud_pdv !== null && order.longitud_pdv !== null && 
                       !isNaN(parseFloat(order.latitud_pdv) && !isNaN(parseFloat(order.longitud_pdv)))) {
@@ -163,7 +181,7 @@ $(function() {
 
                       if(order.latitud_order !== null && order.longitud_order !== null &&
                         !isNaN(parseFloat(order.latitud_order) && !isNaN(parseFloat(order.longitud_order)))) {
-                      // if(isNaN(order.longitud_order) && isNaN(order.latitud_order)) {
+                        // if(isNaN(order.longitud_order) && isNaN(order.latitud_order)) {
 
                         const latOrder = parseFloat(order.latitud_order);
                         const lonOrder = parseFloat(order.longitud_order);
@@ -188,6 +206,7 @@ $(function() {
                         case 'PED':
                           ped++;
                           iconUrl = '../img/redMarker.svg';
+                          total += parseFloat(order.total);
                           break;
                         case 'MNV':
                           mnv++;
@@ -221,6 +240,7 @@ $(function() {
                       switch(order.tipo_order) {
                         case 'PED':
                           ped++;
+                          total += parseFloat(order.total);
                           break;
                         case 'MNV':
                           mnv++;
@@ -237,6 +257,7 @@ $(function() {
                   $rvn.text(rvn);
                   $geo.text(countGeo);
                   $wgeo.text(orders.length - countGeo);
+                  $total.text('$ ' + roundTwoDec(total));
           
                   layerIcons = L.layerGroup(markers);
                   layerIcons.addTo(map);
@@ -247,6 +268,60 @@ $(function() {
                   //const distMaxMin = L.latLng(maxLat, maxLon).distanceTo(L.latLng(minLat, minLon));
 
                   map.setView([(maxLat + minLat) / 2, (maxLon + minLon) / 2], zoom);
+
+                  // Begin Chart
+   
+		              const config = {
+                    type: 'line',
+                    data: {
+                      xLabels: xLabels,
+                      yLabels: ['PED','MNV', 'RVN'],
+                      datasets: [{
+                        label: 'Ordenes',
+                        backgroundColor: 'rgba(255, 68, 68, 1)',
+                        borderColor: 'rgba(255, 68, 68, 0.7)',
+                        data: chartData,
+                        fill: false,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                      }]
+                    },
+                    options: {
+                      responsive: true,
+                      scales: {
+                        xAxes: [{
+                          display: true,
+                          scaleLabel: {
+                            display: true,
+                            labelString: 'Hora'
+                          }
+                        }],
+                        yAxes: [{
+                          type: 'category',
+                          position: 'left',
+                          display: true,
+                          scaleLabel: {
+                            display: true,
+                            labelString: 'Estado'
+                          },
+                          ticks: {
+                            reverse: true
+                          }
+                        }]
+                      }
+                    }
+                  };
+
+                  const chart = new Chart(ctx, config);
+                  
+                  /*
+                  canvas.onclick = function (evt) {
+                    const points = chart.getElementsAtEvent(evt);
+                    console.log(points[0])
+                  };
+                  */
+                  // End Chart
+
                 }
 
               }).fail((jqxhr, textStatus, error) => {
