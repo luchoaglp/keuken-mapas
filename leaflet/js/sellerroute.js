@@ -180,7 +180,7 @@ $(function() {
                             [latOrder, lonOrder]
                           ];
             
-                          lines.push(L.polyline(linePdvOrder, { color: '#e53935', weight: 5 }));
+                          lines.push(L.polyline(linePdvOrder, { color: (distPdvOrder > 0.1 ? '#e53935' : '#007E33'), weight: 2 }));
                         }
                       }
                       
