@@ -5,9 +5,11 @@ $(function() {
   if(params.has('enterprise')) {
 
     const $canvasContainer = $('#canvas-container');
+    const $descriptionContainer = $('#description-container');
     $canvasContainer.hide();
+    $descriptionContainer.hide();
 
-    const canvas = document.getElementById("canvas");
+    const canvas = $("#canvas")[0];
     const ctx = canvas.getContext("2d");
 		ctx.canvas.height = 100;
     
@@ -45,6 +47,7 @@ $(function() {
         const $sellerSelect = $('#seller-select');
         const $mapSelect = $('#map-select');
         const $btnSubmit = $('#btn-submit');
+        const $orderDescription = $('#order-description');
 
         let date = today;
         let seller;
@@ -60,6 +63,7 @@ $(function() {
         let lines = [];
         let xLabels = [];
         let chartData = [];
+        let descriptions = [];
 
         let supervisors = new Map();
 
@@ -97,6 +101,8 @@ $(function() {
           lines = [];
           xLabels = [];
           chartData = [];
+          descriptions = [];
+          $descriptionContainer.hide();
           if(layerIcons) {
             map.removeLayer(layerIcons);
           }
@@ -161,6 +167,14 @@ $(function() {
 
                   orders.forEach(order => {
 
+                    let distPdvOrder = 0;
+
+                    const desc = `<h5>${order.nombre_pdv}</h5>
+                        <p>${ moment(order.date).format('DD/MM/YYYY, hh:mm:ss')} <b>${ order.nosalereason }</b></p><p>Total: $${order.total}</p>
+                        <p>Distancia: <a href="#">${distPdvOrder} Km</a></p>`;
+
+                    descriptions.push(desc);
+
                     xLabels.push(moment(order.date).format('hh:mm:ss'));
                     chartData.push(order.tipo_order);
 
@@ -176,8 +190,6 @@ $(function() {
                       minLon = lonPdv > minLon ? lonPdv : minLon;
                       maxLat = latPdv < maxLat ? latPdv : maxLat;
                       maxLon = lonPdv < maxLon ? lonPdv : maxLon;
-
-                      let distPdvOrder = 0;
 
                       if(order.latitud_order !== null && order.longitud_order !== null &&
                         !isNaN(parseFloat(order.latitud_order) && !isNaN(parseFloat(order.longitud_order)))) {
@@ -220,10 +232,6 @@ $(function() {
                           iconUrl = '../img/uniqueMarker.svg';
                           break;
                       }
-          
-                      const desc = `<h5>${order.nombre_pdv}</h5>
-                        <p>${ moment(order.date).format('DD/MM/YYYY, hh:mm:ss')} <b>${ order.nosalereason }</b></p><p>Total: $${order.total}</p>
-                        <p>Distancia: <a href="#">${distPdvOrder} Km</a></p>`;
           
                       const iconPdv = L.icon({
                         iconUrl,
@@ -314,12 +322,12 @@ $(function() {
 
                   const chart = new Chart(ctx, config);
                   
-                  /*
-                  canvas.onclick = function (evt) {
+                  canvas.onclick = function(evt) {
+                    $descriptionContainer.show();
                     const points = chart.getElementsAtEvent(evt);
-                    console.log(points[0])
+                    $orderDescription.html(descriptions[points[0]._index]);
                   };
-                  */
+    
                   // End Chart
 
                 }
