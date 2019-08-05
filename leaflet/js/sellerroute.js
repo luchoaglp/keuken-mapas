@@ -41,6 +41,8 @@ $(function() {
         const $rvn = $('#rvn');
         const $geo = $('#geo');
         const $wgeo = $('#wgeo');
+        const $insideRadio = $('#inside-radio');
+        const $outsideRadio = $('#outside-radio');
         const $total = $('#total');
         const $date = $('#date');
         const $supervisorSelect = $('#supervisor-select');
@@ -50,6 +52,7 @@ $(function() {
         const $orderDescription = $('#order-description');
 
         let date = today;
+        const outsideRadio = 0.1;
         let seller;
 
         let mapLayerIndex = 0;
@@ -159,10 +162,13 @@ $(function() {
                   let rvn = 0;
                   let countGeo = 0;
                   let total = 0;
+                  let countInsideRadio = 0;
+                  let countOutsideRadio = 0;
 
                   const iconOrder = L.icon({
                     iconUrl: '../img/seller.svg',
-                    iconAnchor: [16, 29]
+                    iconAnchor: [16, 29],
+                    popupAnchor: [0, -29]
                   });
 
                   orders.forEach(order => {
@@ -202,15 +208,31 @@ $(function() {
 
                         if(distPdvOrder > 0) {
           
-                          const markerOrder = L.marker([latOrder, lonOrder], { icon: iconOrder });
+                          const markerOrder = L.marker([latOrder, lonOrder], 
+                            { icon: iconOrder }
+                          );
+                          markerOrder.bindPopup(desc);
                           markers.push(markerOrder);
             
                           const linePdvOrder = [
                             [latPdv, lonPdv],
                             [latOrder, lonOrder]
                           ];
+
+                          let color;
+
+                          if(distPdvOrder > outsideRadio) {
+                            color = '#e53935';
+                            countOutsideRadio++;
+                          } else {
+                            color = '#007E33';
+                            countInsideRadio++;
+                          }
             
-                          lines.push(L.polyline(linePdvOrder, { color: (distPdvOrder > 0.1 ? '#e53935' : '#007E33'), weight: 2 }));
+                          lines.push(L.polyline(linePdvOrder, { 
+                            color, 
+                            weight: 2 
+                          }));
                         }
                       }
                       
@@ -265,8 +287,10 @@ $(function() {
                   $rvn.text(rvn);
                   $geo.text(countGeo);
                   $wgeo.text(orders.length - countGeo);
+                  $insideRadio.text(countInsideRadio);
+                  $outsideRadio.text(25);
                   $total.text('$ ' + roundTwoDec(total));
-          
+       
                   layerIcons = L.layerGroup(markers);
                   layerIcons.addTo(map);
           
@@ -278,7 +302,6 @@ $(function() {
                   map.setView([(maxLat + minLat) / 2, (maxLon + minLon) / 2], zoom);
 
                   // Begin Chart
-   
 		              const config = {
                     type: 'line',
                     data: {
@@ -319,7 +342,7 @@ $(function() {
                       }
                     }
                   };
-
+                  
                   const chart = new Chart(ctx, config);
                   
                   canvas.onclick = function(evt) {
@@ -327,9 +350,7 @@ $(function() {
                     const points = chart.getElementsAtEvent(evt);
                     $orderDescription.html(descriptions[points[0]._index]);
                   };
-    
                   // End Chart
-
                 }
 
               }).fail((jqxhr, textStatus, error) => {

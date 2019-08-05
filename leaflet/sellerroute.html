@@ -16,6 +16,9 @@
   <link href="../css/mdb.min.css" rel="stylesheet">
   <style>
     #map { height: 600px; }
+    ul#stats li {
+      padding: 10px 12px 10px 8px;
+    }
   </style>
 </head>
 <body>
@@ -94,13 +97,13 @@
         <div class="col-md-12 mb-4">
           <div class="card">
             <div class="card-body">
-              <ul class="list-group">
+              <ul class="list-group" id="stats">
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                   <span><img src="../img/redMarker.svg" alt="...">PEDIDO</span>
                   <span class="badge badge-primary badge-pill" id="ped">0</span> 
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                  <span><img src="../img/blueMarker.svg" alt="...">CON STOCK</span>
+                  <span><img src="../img/blueMarker.svg" alt="...">MNV</span>
                   <span class="badge badge-primary badge-pill" id="mnv">0</span> 
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -114,6 +117,14 @@
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                   <span>Sin GEO</span>
                   <span class="badge badge-primary badge-pill" id="wgeo">0</span> 
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  <span><img src="../img/greenLine.png" alt="..."> < 100 mts</span>
+                  <span class="badge badge-primary badge-pill" id="inside-radio">0</span> 
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  <span><img src="../img/redLine.png" alt="..."> > 100 mts</span>
+                  <span class="badge badge-primary badge-pill" id="outside-radio">0</span> 
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     <span>Total</span>
