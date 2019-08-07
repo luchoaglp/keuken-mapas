@@ -4,14 +4,16 @@ $(function() {
   
   if(params.has('enterprise')) {
 
-    const $canvasContainer = $('#canvas-container');
-    const $descriptionContainer = $('#description-container');
-    $canvasContainer.hide();
-    $descriptionContainer.hide();
+    const enterprise = parseInt(params.get('enterprise'));
 
-    const canvas = $("#canvas")[0];
-    const ctx = canvas.getContext("2d");
-		ctx.canvas.height = 100;
+    //const $canvasContainer = $('#canvas-container');
+    //const $descriptionContainer = $('#description-container');
+    //$canvasContainer.hide();
+    //$descriptionContainer.hide();
+
+    //const canvas = $("#canvas")[0];
+    //const ctx = canvas.getContext("2d");
+		//ctx.canvas.height = 100;
     
     const map = L.map('map', {
       center: [-34.603722, -58.381592],
@@ -19,8 +21,6 @@ $(function() {
     });
 
     tilesLayer[0].addTo(map);
-
-    const enterprise = parseInt(params.get('enterprise'));
 
     $.getJSON(`http://keu.webhop.org:8991/getusersforenterprise?enterprise=${enterprise}&tracking=1`, { })
     // $.getJSON(`./js/sellers.json`, { })
@@ -49,7 +49,9 @@ $(function() {
         const $sellerSelect = $('#seller-select');
         const $mapSelect = $('#map-select');
         const $btnSubmit = $('#btn-submit');
-        const $orderDescription = $('#order-description');
+        const $timeLineContainer = $('#timeline-container');
+        const $timeline = $('#timeline');
+        //const $orderDescription = $('#order-description');
 
         let date = today;
         const outsideRadio = 0.1;
@@ -64,9 +66,9 @@ $(function() {
         let layerLines;
         let markers = [];
         let lines = [];
-        let xLabels = [];
-        let chartData = [];
-        let descriptions = [];
+        //let xLabels = [];
+        //let chartData = [];
+        //let descriptions = [];
 
         let supervisors = new Map();
 
@@ -102,10 +104,10 @@ $(function() {
         function reset() {
           markers = [];
           lines = [];
-          xLabels = [];
-          chartData = [];
+          //xLabels = [];
+          //chartData = [];
           descriptions = [];
-          $descriptionContainer.hide();
+          //$descriptionContainer.hide();
           if(layerIcons) {
             map.removeLayer(layerIcons);
           }
@@ -150,7 +152,11 @@ $(function() {
 
                 if(orders.length > 0) {
 
-                  $canvasContainer.show();
+                  $timeLineContainer.css('display', 'block');
+
+                  $timeline.attr('href', `../timeline/?enterprise=${enterprise}&seller=${seller}&date=${date}`);
+
+                  //$canvasContainer.show();
 
                   let minLat = -Infinity;
                   let minLon = -Infinity;
@@ -179,10 +185,10 @@ $(function() {
                         <p>${ moment(order.date).format('DD/MM/YYYY, hh:mm:ss')} <b>${ order.nosalereason }</b></p><p>Total: $${order.total}</p>
                         <p>Distancia: <a href="#">${distPdvOrder} Km</a></p>`;
 
-                    descriptions.push(desc);
+                    //descriptions.push(desc);
 
-                    xLabels.push(moment(order.date).format('hh:mm:ss'));
-                    chartData.push(order.tipo_order);
+                    //xLabels.push(moment(order.date).format('hh:mm:ss'));
+                    //chartData.push(order.tipo_order);
 
                     if(order.latitud_pdv !== null && order.longitud_pdv !== null && 
                       !isNaN(parseFloat(order.latitud_pdv) && !isNaN(parseFloat(order.longitud_pdv)))) {
@@ -302,6 +308,7 @@ $(function() {
                   map.setView([(maxLat + minLat) / 2, (maxLon + minLon) / 2], zoom);
 
                   // Begin Chart
+                  /*
 		              const config = {
                     type: 'line',
                     data: {
@@ -350,6 +357,7 @@ $(function() {
                     const points = chart.getElementsAtEvent(evt);
                     $orderDescription.html(descriptions[points[0]._index]);
                   };
+                  */
                   // End Chart
                 }
 
@@ -366,9 +374,9 @@ $(function() {
         console.log("Request Failed: " + err);
       });
 
-    }
+  }
     
-    function roundTwoDec(num){
-      return Math.round(num * 100) / 100;
-    }
-  });
+  function roundTwoDec(num){
+    return Math.round(num * 100) / 100;
+  }
+});
