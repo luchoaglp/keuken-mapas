@@ -143,6 +143,10 @@ $(function() {
 
                 if(orders.length > 0) {
 
+                  orders.sort(function(o1, o2){
+                    return new Date(o1.date) - new Date(o2.date);
+                  });
+
                   $timeLineContainer.css('display', 'block');
 
                   $timeline.attr('href', `../timeline/?enterprise=${enterprise}&seller=${seller}&date=${date}`);
@@ -161,6 +165,7 @@ $(function() {
                   let total = 0;
                   let countInsideRadio = 0;
                   let countOutsideRadio = 0;
+                  let counter = 0;
 
                   orders.forEach(order => {
 
@@ -174,7 +179,7 @@ $(function() {
                     const orderTotal = roundTwoDec(order.total);
                     const orderTotalStr = orderTotal > 0 ? `<br>Total: $${orderTotal}` : '';
 
-                    let desc = `${ moment(order.date).format('DD/MM/YYYY hh:mm:ss')}<h5><span class="badge badge-info">${order.nombre_pdv}</span></h5>
+                    let desc = `${ moment(order.date).format('DD/MM/YYYY hh:mm:ss')} <h5><span class="badge badge-default">${++counter}</span> <span class="badge badge-info">${order.nombre_pdv}</span></h5>
                     <b>${ order.nosalereason }</b>${orderTotalStr}`;
 
                     if(order.latitud_pdv !== null && order.longitud_pdv !== null && 
