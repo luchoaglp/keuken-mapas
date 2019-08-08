@@ -17,6 +17,9 @@
     ul#stats li {
       padding: 10px 12px 10px 8px;
     }
+    #timeline-container {
+      display: none;
+    }
     .marker{
       width: 26px;
       height: 26px;
@@ -82,7 +85,7 @@
             <option value="1">Satélite</option>
         </select>
       </div>
-      <div class="col-md-2"><br>
+      <div class="col-md-2 mb-2"><br>
         <button type="button" id="btn-submit" class="btn blue-gradient">Consultar <i class="fas fa-eye"></i></button>
       </div>
     </div>
@@ -120,19 +123,19 @@
                 <span class="badge badge-primary badge-pill" id="wgeo">0</span> 
               </li>
               <li class="list-group-item d-flex justify-content-between align-items-center">
-                <span><img src="../img/greenLine.png" alt="..."> < 100 mts</span>
+                <span><img src="../img/greenLine.png" alt="green-line"> < 100 mts</span>
                 <span class="badge badge-primary badge-pill" id="inside-radio">0</span> 
               </li>
               <li class="list-group-item d-flex justify-content-between align-items-center">
-                <span><img src="../img/redLine.png" alt="..."> > 100 mts</span>
+                <span><img src="../img/redLine.png" alt="red-line"> > 100 mts</span>
                 <span class="badge badge-primary badge-pill" id="outside-radio">0</span> 
               </li>
               <li class="list-group-item d-flex justify-content-between align-items-center">
                 <span>Total</span>
                 <span class="badge badge-primary badge-pill" id="total">$ 0</span> 
               </li>
-              <li class="list-group-item text-center" id="timeline-container">
-                <a class="btn aqua-gradient" id="timeline" target="_blank">Timeline <i class="far fa-calendar-alt"></i></a>
+              <li class="list-group-item" id="timeline-container">
+                <a class="btn btn-block aqua-gradient" id="timeline" target="_blank">Timeline <i class="far fa-calendar-alt"></i></a>
               </li>
             </ul>
           </div>
