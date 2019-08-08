@@ -181,14 +181,13 @@ $(function() {
 
                     let distPdvOrder = 0;
 
-                    const desc = `<h5>${order.nombre_pdv}</h5>
-                        <p>${ moment(order.date).format('DD/MM/YYYY, hh:mm:ss')} <b>${ order.nosalereason }</b></p><p>Total: $${order.total}</p>
-                        <p>Distancia: <a href="#">${distPdvOrder} Km</a></p>`;
-
                     //descriptions.push(desc);
 
                     //xLabels.push(moment(order.date).format('hh:mm:ss'));
                     //chartData.push(order.tipo_order);
+
+                    let desc = `<h5>${order.nombre_pdv}</h5>
+                    <p>${ moment(order.date).format('DD/MM/YYYY, hh:mm:ss')} <b>${ order.nosalereason }</b></p><p>Total: $${order.total}</p>`;
 
                     if(order.latitud_pdv !== null && order.longitud_pdv !== null && 
                       !isNaN(parseFloat(order.latitud_pdv) && !isNaN(parseFloat(order.longitud_pdv)))) {
@@ -211,6 +210,8 @@ $(function() {
                         const lonOrder = parseFloat(order.longitud_order);
 
                         distPdvOrder = roundTwoDec(L.latLng(latPdv, lonPdv).distanceTo(L.latLng(latOrder, lonOrder)) / 1000);
+
+                        desc += `<p>Distancia: <a href="#">${distPdvOrder} Km</a></p>`;
 
                         if(distPdvOrder > 0) {
           
@@ -294,7 +295,7 @@ $(function() {
                   $geo.text(countGeo);
                   $wgeo.text(orders.length - countGeo);
                   $insideRadio.text(countInsideRadio);
-                  $outsideRadio.text(25);
+                  $outsideRadio.text(countOutsideRadio);
                   $total.text('$ ' + roundTwoDec(total));
        
                   layerIcons = L.layerGroup(markers);
