@@ -17,8 +17,9 @@
     ul#stats li {
       padding: 10px 12px 10px 8px;
     }
-    #timeline-container {
-      display: none;
+    .marker{
+      width: 26px;
+      height: 26px;
     }
   </style>
 </head>
@@ -100,15 +101,15 @@
             <div class="card-body">
               <ul class="list-group" id="stats">
                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                  <span><img src="../img/redMarker.svg" alt="...">PEDIDO</span>
+                  <span><img src="../img/redMarker.svg" alt="red-marker" class="marker">PEDIDO</span>
                   <span class="badge badge-primary badge-pill" id="ped">0</span> 
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                  <span><img src="../img/blueMarker.svg" alt="...">MNV</span>
+                  <span><img src="../img/blueMarker.svg" alt="blue-marker" class="marker">MNV</span>
                   <span class="badge badge-primary badge-pill" id="mnv">0</span> 
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                  <span><img src="../img/orangeMarker.svg" alt="...">SIN VISITA</span>
+                  <span><img src="../img/orangeMarker.svg" alt="orange-marker" class="marker">SIN VISITA</span>
                   <span class="badge badge-primary badge-pill" id="rvn">0</span> 
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-center">
