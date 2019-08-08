@@ -5,15 +5,6 @@ $(function() {
   if(params.has('enterprise')) {
 
     const enterprise = parseInt(params.get('enterprise'));
-
-    //const $canvasContainer = $('#canvas-container');
-    //const $descriptionContainer = $('#description-container');
-    //$canvasContainer.hide();
-    //$descriptionContainer.hide();
-
-    //const canvas = $("#canvas")[0];
-    //const ctx = canvas.getContext("2d");
-		//ctx.canvas.height = 100;
     
     const map = L.map('map', {
       center: [-34.603722, -58.381592],
@@ -180,8 +171,11 @@ $(function() {
                     //xLabels.push(moment(order.date).format('hh:mm:ss'));
                     //chartData.push(order.tipo_order);
 
-                    let desc = `<h5>${order.nombre_pdv}</h5>
-                    <p>${ moment(order.date).format('DD/MM/YYYY, hh:mm:ss')} <b>${ order.nosalereason }</b></p><p>Total: $${order.total}</p>`;
+                    const orderTotal = roundTwoDec(order.total);
+                    const orderTotalStr = orderTotal > 0 ? `<br>Total: $${orderTotal}` : '';
+
+                    let desc = `${ moment(order.date).format('DD/MM/YYYY hh:mm:ss')}<h5><span class="badge badge-info">${order.nombre_pdv}</span></h5>
+                    <b>${ order.nosalereason }</b>${orderTotalStr}`;
 
                     if(order.latitud_pdv !== null && order.longitud_pdv !== null && 
                       !isNaN(parseFloat(order.latitud_pdv) && !isNaN(parseFloat(order.longitud_pdv)))) {
@@ -205,7 +199,7 @@ $(function() {
 
                         distPdvOrder = roundTwoDec(L.latLng(latPdv, lonPdv).distanceTo(L.latLng(latOrder, lonOrder)) / 1000);
 
-                        desc += `<p>Distancia: <a href="#">${distPdvOrder} Km</a></p>`;
+                        desc += `<br>Distancia: <a href="#">${distPdvOrder} Km</a>`;
 
                         if(distPdvOrder > 0) {
 
@@ -311,58 +305,6 @@ $(function() {
 
                   map.setView([(maxLat + minLat) / 2, (maxLon + minLon) / 2], zoom);
 
-                  // Begin Chart
-                  /*
-		              const config = {
-                    type: 'line',
-                    data: {
-                      xLabels: xLabels,
-                      yLabels: ['PED','MNV', 'RVN'],
-                      datasets: [{
-                        label: 'Ordenes',
-                        backgroundColor: 'rgba(255, 68, 68, 1)',
-                        borderColor: 'rgba(255, 68, 68, 0.7)',
-                        data: chartData,
-                        fill: false,
-                        pointRadius: 4,
-                        pointHoverRadius: 6,
-                      }]
-                    },
-                    options: {
-                      responsive: true,
-                      scales: {
-                        xAxes: [{
-                          display: true,
-                          scaleLabel: {
-                            display: true,
-                            labelString: 'Hora'
-                          }
-                        }],
-                        yAxes: [{
-                          type: 'category',
-                          position: 'left',
-                          display: true,
-                          scaleLabel: {
-                            display: true,
-                            labelString: 'Estado'
-                          },
-                          ticks: {
-                            reverse: true
-                          }
-                        }]
-                      }
-                    }
-                  };
-                  
-                  const chart = new Chart(ctx, config);
-                  
-                  canvas.onclick = function(evt) {
-                    $descriptionContainer.show();
-                    const points = chart.getElementsAtEvent(evt);
-                    $orderDescription.html(descriptions[points[0]._index]);
-                  };
-                  */
-                  // End Chart
                 }
 
               }).fail((jqxhr, textStatus, error) => {
