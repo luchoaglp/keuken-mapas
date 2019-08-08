@@ -171,12 +171,6 @@ $(function() {
                   let countInsideRadio = 0;
                   let countOutsideRadio = 0;
 
-                  const iconOrder = L.icon({
-                    iconUrl: '../img/seller.svg',
-                    iconAnchor: [16, 29],
-                    popupAnchor: [0, -29]
-                  });
-
                   orders.forEach(order => {
 
                     let distPdvOrder = 0;
@@ -214,6 +208,25 @@ $(function() {
                         desc += `<p>Distancia: <a href="#">${distPdvOrder} Km</a></p>`;
 
                         if(distPdvOrder > 0) {
+
+                          let color;
+                          let iconOrderUrl;
+
+                          if(distPdvOrder > outsideRadio) {
+                            color = '#e53935';
+                            iconOrderUrl = '../img/redSeller.svg';
+                            countOutsideRadio++;
+                          } else {
+                            color = '#007E33';
+                            iconOrderUrl = '../img/greenSeller.svg';
+                            countInsideRadio++;
+                          }
+
+                          const iconOrder = L.icon({
+                            iconUrl: iconOrderUrl,
+                            iconAnchor: [16, 29],
+                            popupAnchor: [0, -29]
+                          });
           
                           const markerOrder = L.marker([latOrder, lonOrder], 
                             { icon: iconOrder }
@@ -225,16 +238,6 @@ $(function() {
                             [latPdv, lonPdv],
                             [latOrder, lonOrder]
                           ];
-
-                          let color;
-
-                          if(distPdvOrder > outsideRadio) {
-                            color = '#e53935';
-                            countOutsideRadio++;
-                          } else {
-                            color = '#007E33';
-                            countInsideRadio++;
-                          }
             
                           lines.push(L.polyline(linePdvOrder, { 
                             color, 
