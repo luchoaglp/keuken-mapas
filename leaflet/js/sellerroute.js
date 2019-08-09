@@ -5,6 +5,12 @@ $(function() {
   if(params.has('enterprise')) {
 
     const enterprise = parseInt(params.get('enterprise'));
+
+    const today = getCurrentDate();
+
+    const $date = $('#date');
+
+    $date.val(today);
     
     const map = L.map('map', {
       center: [-34.603722, -58.381592],
@@ -18,14 +24,6 @@ $(function() {
       .done(function(data) {
 
         const sellers = data;
-  
-        Date.prototype.toDateInputValue = (function() {
-          const local = new Date(this);
-          local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
-          return local.toJSON().slice(0, 10);
-        });
-
-        const today = new Date().toDateInputValue();
     
         const $ped = $('#ped');
         const $mnv = $('#mnv');
@@ -35,7 +33,6 @@ $(function() {
         const $insideRadio = $('#inside-radio');
         const $outsideRadio = $('#outside-radio');
         const $total = $('#total');
-        const $date = $('#date');
         const $supervisorSelect = $('#supervisor-select');
         const $sellerSelect = $('#seller-select');
         const $mapSelect = $('#map-select');
@@ -43,14 +40,13 @@ $(function() {
         const $timeLineContainer = $('#timeline-container');
         const $timeline = $('#timeline');
 
+        const zoom = 15;
+
         let date = today;
         const outsideRadio = 0.1;
         let seller;
 
         let mapLayerIndex = 0;
-        const zoom = 16;
-
-        $date.val(date);
 
         let layerIcons;
         let layerLines;
@@ -166,6 +162,8 @@ $(function() {
 
                     const isGeo = order.latitud_pdv !== null && order.longitud_pdv !== null && !isNaN(parseFloat(order.latitud_pdv) && !isNaN(parseFloat(order.longitud_pdv)));
 
+                    let badgeColor;
+
                     switch(order.tipo_order) {
                       case 'PED':
                         ped++;
@@ -173,6 +171,7 @@ $(function() {
                         if(isGeo) {
                           iconUrl = '../img/redMarker.svg';
                           orderDescription.setCounter(++counter);
+                          badgeColor = '#ff4444';
                         }
                         break;
                       case 'MNV':
@@ -180,12 +179,14 @@ $(function() {
                         if(isGeo) {
                           iconUrl = '../img/blueMarker.svg';
                           orderDescription.setCounter(++counter);
+                          badgeColor = '#33b5e5';
                         }
                         break;
                       case 'RVN':
                         rvn++;
                         if(isGeo) {
                           iconUrl = '../img/orangeMarker.svg';
+                          badgeColor = '#FF8800';
                         }
                         break;
                     }
@@ -200,6 +201,7 @@ $(function() {
                       orderDescription.setPdv(order.nombre_pdv);
                       orderDescription.setNoSaleReason(order.nosalereason);
                       orderDescription.setOrderTotal(roundTwoDec(order.total));
+                      orderDescription.setBadgeColor(badgeColor);
 
                       let latPdv = parseFloat(order.latitud_pdv);
                       let lonPdv = parseFloat(order.longitud_pdv);
@@ -289,7 +291,6 @@ $(function() {
                   //const distMaxMin = L.latLng(maxLat, maxLon).distanceTo(L.latLng(minLat, minLon));
 
                   map.setView([(maxLat + minLat) / 2, (maxLon + minLon) / 2], zoom);
-
                 }
 
               }).fail((jqxhr, textStatus, error) => {
@@ -306,6 +307,12 @@ $(function() {
       });
 
   }
+
+  function getCurrentDate() {
+    const local = new Date();
+    //local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
+    return local.toJSON().slice(0, 10);
+  };
     
   function roundTwoDec(num){
     return Math.round(num * 100) / 100;
