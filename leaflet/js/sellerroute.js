@@ -42,7 +42,6 @@ $(function() {
         const $btnSubmit = $('#btn-submit');
         const $timeLineContainer = $('#timeline-container');
         const $timeline = $('#timeline');
-        //const $orderDescription = $('#order-description');
 
         let date = today;
         const outsideRadio = 0.1;
@@ -57,9 +56,6 @@ $(function() {
         let layerLines;
         let markers = [];
         let lines = [];
-        //let xLabels = [];
-        //let chartData = [];
-        //let descriptions = [];
 
         let supervisors = new Map();
 
@@ -95,10 +91,7 @@ $(function() {
         function reset() {
           markers = [];
           lines = [];
-          //xLabels = [];
-          //chartData = [];
           descriptions = [];
-          //$descriptionContainer.hide();
           if(layerIcons) {
             map.removeLayer(layerIcons);
           }
@@ -168,49 +161,45 @@ $(function() {
                   let counter = 0;
 
                   orders.forEach(order => {
-
-                    let distPdvOrder = 0;
                     
-                    const orderTotal = roundTwoDec(order.total);
-                    //const orderTotalStr = orderTotal > 0 ? `<br>Total: $${orderTotal}` : '';
+                    const orderDescription = new OrderDescription();
 
-                    const description = new Description();
+                    const isGeo = order.latitud_pdv !== null && order.longitud_pdv !== null && !isNaN(parseFloat(order.latitud_pdv) && !isNaN(parseFloat(order.longitud_pdv)));
 
-                    if(order.latitud_pdv !== null && order.longitud_pdv !== null && 
-                      !isNaN(parseFloat(order.latitud_pdv) && !isNaN(parseFloat(order.longitud_pdv)))) {
-                      
-                      switch(order.tipo_order) {
-                        case 'PED':
-                          ped++;
+                    switch(order.tipo_order) {
+                      case 'PED':
+                        ped++;
+                        total += parseFloat(order.total);
+                        if(isGeo) {
                           iconUrl = '../img/redMarker.svg';
-                          total += parseFloat(order.total);
-                          description.setCounter(++counter);
-                          break;
-                        case 'MNV':
-                          mnv++;
+                          orderDescription.setCounter(++counter);
+                        }
+                        break;
+                      case 'MNV':
+                        mnv++;
+                        if(isGeo) {
                           iconUrl = '../img/blueMarker.svg';
-                          description.setCounter(++counter);
-                          break;
-                        case 'RVN':
-                          rvn++;
+                          orderDescription.setCounter(++counter);
+                        }
+                        break;
+                      case 'RVN':
+                        rvn++;
+                        if(isGeo) {
                           iconUrl = '../img/orangeMarker.svg';
-                          break;
-                        default:
-                          iconUrl = '../img/uniqueMarker.svg';
-                          break;
-                      }
+                        }
+                        break;
+                    }
 
-                      description.setDate(moment(order.date).format('DD/MM/YYYY hh:mm:ss'));
-                      description.setPdv(order.nombre_pdv);
-                      description.setNoSaleReason(order.nosalereason);
-                      description.setOrderTotal(orderTotal);
+                    if(isGeo) {
 
-                      /*
-                      let desc = `<h5><span class="badge badge-default">${++counter}</span> <span class="badge badge-info">${order.nombre_pdv}</span></h5>
-                      <b>${ order.nosalereason }</b>${orderTotalStr}`;
-                      */
-          
                       countGeo++;
+
+                      let distPdvOrder = 0;
+
+                      orderDescription.setDate(order.date);
+                      orderDescription.setPdv(order.nombre_pdv);
+                      orderDescription.setNoSaleReason(order.nosalereason);
+                      orderDescription.setOrderTotal(roundTwoDec(order.total));
 
                       let latPdv = parseFloat(order.latitud_pdv);
                       let lonPdv = parseFloat(order.longitud_pdv);
@@ -223,8 +212,6 @@ $(function() {
                       if(order.latitud_order !== null && order.longitud_order !== null &&
                         !isNaN(parseFloat(order.latitud_order) && !isNaN(parseFloat(order.longitud_order)))) {
 
-                        // if(isNaN(order.longitud_order) && isNaN(order.latitud_order)) {
-
                         const latOrder = parseFloat(order.latitud_order);
                         const lonOrder = parseFloat(order.longitud_order);
 
@@ -232,7 +219,7 @@ $(function() {
 
                         if(distPdvOrder > 0) {
 
-                          description.setDistPdvOrder(distPdvOrder);
+                          orderDescription.setDistPdvOrder(distPdvOrder);
 
                           let color;
                           let iconOrderUrl;
@@ -256,7 +243,7 @@ $(function() {
                           const markerOrder = L.marker([latOrder, lonOrder], 
                             { icon: iconOrder }
                           );
-                          markerOrder.bindPopup(description.toStr());
+                          markerOrder.bindPopup(orderDescription.toStr());
                           markers.push(markerOrder);
             
                           const linePdvOrder = [
@@ -279,26 +266,9 @@ $(function() {
           
                       const markerPdv = L.marker([latPdv, lonPdv], { icon: iconPdv });
 
-                      //let desc = descDate + descCounter + descPdv + descNoSaleReason + descPdvOrder;
-
-                      markerPdv.bindPopup(description.toStr());
+                      markerPdv.bindPopup(orderDescription.toStr());
                       markers.push(markerPdv);
-                    
-                    } else {
-          
-                      switch(order.tipo_order) {
-                        case 'PED':
-                          ped++;
-                          total += parseFloat(order.total);
-                          break;
-                        case 'MNV':
-                          mnv++;
-                          break;
-                        case 'RVN':
-                          rvn++;
-                          break;
-                      }
-                    }
+                    } 
                   });
           
                   $ped.text(ped);

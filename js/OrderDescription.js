@@ -1,7 +1,7 @@
-class Description {
+class OrderDescription {
  
     setDate(date) {
-        this.date = date;
+        this.date = moment(date).format('DD/MM/YYYY hh:mm:ss');
     }
 
     setCounter(counter) {
