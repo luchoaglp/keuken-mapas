@@ -305,16 +305,14 @@ $(function() {
         const err = textStatus + ", " + error;
         console.log("Request Failed: " + err);
       });
-
+      
+      function getCurrentDate() {
+        return new Date().toJSON().slice(0, 10);
+      }
+        
+      function roundTwoDec(num){
+        return Math.round(num * 100) / 100;
+      }
   }
 
-  function getCurrentDate() {
-    const local = new Date();
-    //local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
-    return local.toJSON().slice(0, 10);
-  };
-    
-  function roundTwoDec(num){
-    return Math.round(num * 100) / 100;
-  }
 });
