@@ -24,6 +24,6 @@ ul#stats li {
 .blue-marker {
   background-image: url('../../img/blueMarker.svg');
 }
-.orange-marker {
-  background-image: url('../../img/orangeMarker.svg');
+.black-marker {
+  background-image: url('../../img/blackMarker.svg');
 }

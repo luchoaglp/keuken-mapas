@@ -170,7 +170,6 @@ $(function() {
                         ped++;
                         total += parseFloat(order.total);
                         if(isGeo) {
-                          //iconUrl = '../img/redMarker.svg';
                           iconClass = 'red-marker';
                           //orderDescription.setCounter(++counter);
                           ++counter;
@@ -180,7 +179,6 @@ $(function() {
                       case 'MNV':
                         mnv++;
                         if(isGeo) {
-                          //iconUrl = '../img/blueMarker.svg';
                           iconClass = 'blue-marker';
                           //orderDescription.setCounter(++counter);
                           ++counter;
@@ -190,9 +188,8 @@ $(function() {
                       case 'RVN':
                         rvn++;
                         if(isGeo) {
-                          //iconUrl = '../img/orangeMarker.svg';
-                          iconClass = 'orange-marker';
-                          badgeColor = '#FF8800';
+                          iconClass = 'black-marker';
+                          badgeColor = '#212121';
                         }
                         break;
                     }
@@ -273,7 +270,7 @@ $(function() {
                         iconSize: [40, 40],
                         popupAnchor: [0, -38],
                         className: iconClass,
-                        html: (iconClass !== 'orange-marker' ? `<div class="badges"><span class="badge badge-success">${counter}</span><span class="badge" style="background:${badgeColor}">${orderDate}</span></div>` : '')
+                        html: (iconClass !== 'black-marker' ? `<div class="badges"><span class="badge badge-success">${counter}</span><span class="badge" style="background:${badgeColor}">${orderDate}</span></div>` : '')
                       });
           
                       /*
