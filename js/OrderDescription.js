@@ -1,12 +1,14 @@
 class OrderDescription {
  
     setDate(date) {
-        this.date = moment(date).format('DD/MM/YYYY hh:mm:ss');
+        this.date = date;
     }
 
+    /*
     setCounter(counter) {
         this.counter = counter;
     }
+    */
 
     setPdv(pdv) {
         this.pdv = pdv;
@@ -27,16 +29,16 @@ class OrderDescription {
     setDistPdvOrder(distPdvOrder) {
         this.distPdvOrder = distPdvOrder;
     }
-
+    
     setBadgeColor(badgeColor) {
         this.badgeColor = badgeColor;
     }
 
     toStr() {
         let str = this.date;
-        str += '<h5>';
-        str += this.counter ? `<span class="badge badge-default">${this.counter}</span> ` : '';
-        str += `<span class="badge" style="background:${this.badgeColor}">${this.pdv}</span></h5>`;
+        //str += '<h5>';
+        //str += this.counter ? `<span class="badge badge-default">${this.counter}</span> ` : '';
+        str += `<h5><span class="badge" style="background:${this.badgeColor}">${this.pdv}</span></h5>`;
         str += `<b>${this.noSaleReason}</b>`;
         str += this.orderTotal > 0 ? `<br>Total: $${this.orderTotal}` : '';
         str += this.distPdvOrder ? `<br>Distancia: <a href="#">${this.distPdvOrder} Km</a>` : '';

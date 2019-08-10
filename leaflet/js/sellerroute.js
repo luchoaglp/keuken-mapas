@@ -163,29 +163,35 @@ $(function() {
                     const isGeo = order.latitud_pdv !== null && order.longitud_pdv !== null && !isNaN(parseFloat(order.latitud_pdv) && !isNaN(parseFloat(order.longitud_pdv)));
 
                     let badgeColor;
+                    let iconClass;
 
                     switch(order.tipo_order) {
                       case 'PED':
                         ped++;
                         total += parseFloat(order.total);
                         if(isGeo) {
-                          iconUrl = '../img/redMarker.svg';
-                          orderDescription.setCounter(++counter);
+                          //iconUrl = '../img/redMarker.svg';
+                          iconClass = 'red-marker';
+                          //orderDescription.setCounter(++counter);
+                          ++counter;
                           badgeColor = '#ff4444';
                         }
                         break;
                       case 'MNV':
                         mnv++;
                         if(isGeo) {
-                          iconUrl = '../img/blueMarker.svg';
-                          orderDescription.setCounter(++counter);
+                          //iconUrl = '../img/blueMarker.svg';
+                          iconClass = 'blue-marker';
+                          //orderDescription.setCounter(++counter);
+                          ++counter;
                           badgeColor = '#33b5e5';
                         }
                         break;
                       case 'RVN':
                         rvn++;
                         if(isGeo) {
-                          iconUrl = '../img/orangeMarker.svg';
+                          //iconUrl = '../img/orangeMarker.svg';
+                          iconClass = 'orange-marker';
                           badgeColor = '#FF8800';
                         }
                         break;
@@ -197,7 +203,9 @@ $(function() {
 
                       let distPdvOrder = 0;
 
-                      orderDescription.setDate(order.date);
+                      const orderDate = moment(order.date).format('hh:mm:ss');
+
+                      orderDescription.setDate(orderDate);
                       orderDescription.setPdv(order.nombre_pdv);
                       orderDescription.setNoSaleReason(order.nosalereason);
                       orderDescription.setOrderTotal(roundTwoDec(order.total));
@@ -259,12 +267,23 @@ $(function() {
                           }));
                         }
                       }
+
+                      const iconPdv = L.divIcon({
+                        iconAnchor: [22, 38],
+                        iconSize: [40, 40],
+                        iconAnchor: [22, 38],
+                        popupAnchor: [0, -38],
+                        className: iconClass,
+                        html: (iconClass !== 'orange-marker' ? `<div class="badges"><span class="badge badge-success">${counter}</span><span class="badge" style="background:${badgeColor}">${orderDate}</span></div>` : '')
+                      });
           
+                      /*
                       const iconPdv = L.icon({
                         iconUrl,
                         iconAnchor: [22, 38],
                         popupAnchor: [0, -38]
                       });
+                      */
           
                       const markerPdv = L.marker([latPdv, lonPdv], { icon: iconPdv });
 
