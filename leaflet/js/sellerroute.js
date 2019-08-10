@@ -271,7 +271,6 @@ $(function() {
                       const iconPdv = L.divIcon({
                         iconAnchor: [22, 38],
                         iconSize: [40, 40],
-                        iconAnchor: [22, 38],
                         popupAnchor: [0, -38],
                         className: iconClass,
                         html: (iconClass !== 'orange-marker' ? `<div class="badges"><span class="badge badge-success">${counter}</span><span class="badge" style="background:${badgeColor}">${orderDate}</span></div>` : '')

@@ -11,8 +11,9 @@ ul#stats li {
 }
 .badges {
   margin-left: 29px;
-  margin-top: -12px;
+  margin-top: -20px;
   opacity: .8;
+  font-size: 1.5em;
 }
 .badges span {
   display: inline;
