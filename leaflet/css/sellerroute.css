@@ -1,0 +1,28 @@
+#map { height: 600px; }
+ul#stats li {
+  padding: 10px 12px 10px 8px;
+}
+#timeline-container {
+  display: none;
+}
+.marker{
+  width: 26px;
+  height: 26px;
+}
+.badges {
+  margin-left: 29px;
+  margin-top: -12px;
+  opacity: .8;
+}
+.badges span {
+  display: inline;
+}
+.red-marker {
+  background-image: url('../../img/redMarker.svg');
+}
+.blue-marker {
+  background-image: url('../../img/blueMarker.svg');
+}
+.orange-marker {
+  background-image: url('../../img/orangeMarker.svg');
+}
