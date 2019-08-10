@@ -14,8 +14,18 @@ $(function() {
     
     const map = L.map('map', {
       center: [-34.603722, -58.381592],
-      zoom: 12
+      zoom: 12,
+      fullscreenControl: true
     });
+
+    /*
+		map.on('enterFullscreen', function(){
+			if(window.console) window.console.log('enterFullscreen');
+		});
+		map.on('exitFullscreen', function(){
+			if(window.console) window.console.log('exitFullscreen');
+    });
+    */
 
     tilesLayer[0].addTo(map);
 
