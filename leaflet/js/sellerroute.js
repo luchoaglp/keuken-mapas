@@ -213,7 +213,8 @@ $(function() {
                       const orderDate = moment(order.date).format('hh:mm:ss');
 
                       orderDescription.setDate(orderDate);
-                      orderDescription.setPdv(order.nombre_pdv);
+                      orderDescription.setPdv(order.pdv);
+                      orderDescription.setPdvNombre(order.nombre_pdv);
                       orderDescription.setNoSaleReason(order.nosalereason);
                       orderDescription.setOrderTotal(roundTwoDec(order.total));
                       orderDescription.setBadgeColor(badgeColor);

@@ -14,6 +14,10 @@ class OrderDescription {
         this.pdv = pdv;
     }
 
+    setPdvNombre(pdvNombre) {
+        this.pdvNombre = pdvNombre;
+    }
+
     setNoSaleReason(noSaleReason) {
         this.noSaleReason = noSaleReason;
     }
@@ -38,7 +42,7 @@ class OrderDescription {
         let str = this.date;
         //str += '<h5>';
         //str += this.counter ? `<span class="badge badge-default">${this.counter}</span> ` : '';
-        str += `<h5><span class="badge" style="background:${this.badgeColor}">${this.pdv}</span></h5>`;
+        str += `<h5><span class="badge badge-success">PDV: ${this.pdv}</span> <span class="badge" style="background:${this.badgeColor}">${this.pdvNombre}</span></h5>`;
         str += `<b>${this.noSaleReason}</b>`;
         str += this.orderTotal > 0 ? `<br>Total: $${this.orderTotal}` : '';
         str += this.distPdvOrder ? `<br>Distancia: <a href="#">${this.distPdvOrder} Km</a>` : '';
