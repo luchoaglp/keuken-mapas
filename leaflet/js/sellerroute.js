@@ -18,6 +18,12 @@ $(function() {
 
     $('#user').text(user);
 
+    $('#logout').click(function() {
+      Cookie.deleteCookie('enterprise');
+      Cookie.deleteCookie('user');
+      $(location).attr('href','../');
+    });
+
     const today = getCurrentDate();
 
     const $date = $('#date');

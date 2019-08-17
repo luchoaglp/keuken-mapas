@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Inicio</title>
+  <link rel="shortcut icon" href="../img/keuken.ico">
   <link href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" rel="stylesheet">
   <link href="../css/bootstrap.min.css" rel="stylesheet">
   <link href="../css/mdb.min.css" rel="stylesheet">
@@ -39,8 +40,9 @@
       <ul class="navbar-nav my-0">
           <li class="nav-item">
             <span class="nav-link">Bienvenido: <span id="user"></span></span>
-          </li>
+          </li>    
         </ul>
+        <a type="button" class="btn-floating btn-sm btn-danger" id="logout"><i class="fas fa-power-off"></i></a>
     </div>
   </nav>
 
@@ -61,6 +63,12 @@ $(function() {
     const user = Cookie.getCookie('user');
 
     $('#user').text(user);
+
+    $('#logout').click(function() {
+      Cookie.deleteCookie('enterprise');
+      Cookie.deleteCookie('user');
+      $(location).attr('href','../');
+    });
   }
 
 });
