@@ -4,12 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Vendedor Ruta</title>
-  <!-- Font Awesome -->
+  <title>Inicio</title>
   <link href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" rel="stylesheet">
-  <!-- Bootstrap core CSS -->
   <link href="../css/bootstrap.min.css" rel="stylesheet">
-  <!-- Material Design Bootstrap -->
   <link href="../css/mdb.min.css" rel="stylesheet">
 </head>
 <body>
@@ -28,25 +25,45 @@
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" id="dropdown-seller" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Vendedor</a>
             <div class="dropdown-menu dropdown-primary" aria-labelledby="dropdown-sellerMenuLink">
-                <a class="dropdown-item" href="./sellerroute.html?enterprise=10010033">Ruta</a>
-                <a class="dropdown-item" href="./tracksforseller.html?enterprise=10010033">Seguimiento</a>
+                <a class="dropdown-item" href="./sellerroute.html">Ruta</a>
+                <a class="dropdown-item" href="#">Seguimiento</a>
             </div>
         </li>
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" id="dropdown-enterprise" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Empresa</a>
             <div class="dropdown-menu dropdown-primary" aria-labelledby="dropdown-enterpriseMenuLink">
-              <a class="dropdown-item" href="./tracksforenterprise.html?enterprise=10010033">Seguimiento</a>
+              <a class="dropdown-item" href="#">Seguimiento</a>
             </div>
           </li>
       </ul>
+      <ul class="navbar-nav my-0">
+          <li class="nav-item">
+            <span class="nav-link">Bienvenido: <span id="user"></span></span>
+          </li>
+        </ul>
     </div>
   </nav>
-
 
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="../js/popper.min.js"></script>
 <script src="../js/bootstrap.min.js"></script>
 <script src="../js/mdb.min.js"></script>
+<script src="../js/cookie.js"></script>
+<script>
+$(function() {
 
+  const enterprise = Cookie.getCookie('enterprise');
+
+  if(!enterprise) {
+    $(location).attr('href','../');
+  } else {
+
+    const user = Cookie.getCookie('user');
+
+    $('#user').text(user);
+  }
+
+});
+</script>
 </body>
 </html>

@@ -12,11 +12,12 @@
   <link href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" rel="stylesheet">
   <link href="./css/bootstrap.min.css" rel="stylesheet">
   <link href="./css/mdb.min.css" rel="stylesheet">
+  <link href="./css/style.css" rel="stylesheet">
 </head>
 <body>
 
-  <nav class="navbar navbar-expand-lg navbar-dark primary-color mb-3">
-    <a class="navbar-brand" href="./">Login</a>
+  <nav class="navbar navbar-expand-lg navbar-dark primary-color mb-5">
+    <a class="navbar-brand" href="#">Login</a>
       
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#maps-nav" aria-controls="maps-nav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -36,14 +37,12 @@
         
           <div class="card-body px-lg-5 pt-0">
         
-            <!-- Form -->
             <form class="text-center" style="color: #757575;" action="#!">
               
-              <div class="md-form mt-3">
+              <div class="md-form mt-5">
                 <input type="text" id="user" class="form-control" maxlength="10" required autofocus>
                 <label for="user">Usuario</label>
               </div>
-        
               <div class="md-form">
                 <input type="password" id="password" class="form-control" required>
                 <label for="password">Password</label>
@@ -52,6 +51,13 @@
               <button class="btn blue-gradient btn-block my-4 waves-effect z-depth-0" type="button" id="submit">Ingresar</button>
         
             </form>
+
+            <div class="error">
+              <hr>
+              <div class="btn btn-danger btn-block">
+                Usuario o clave incorrectos
+              </div>
+            </div>
         
           </div>
         </div>

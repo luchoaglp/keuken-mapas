@@ -11,7 +11,7 @@ $(function() {
   const enterprise = Cookie.getCookie('enterprise');
 
   if(!enterprise) {
-    alert('Acceso denegado.')
+    $(location).attr('href','../');
   } else {
 
     const user = Cookie.getCookie('user');

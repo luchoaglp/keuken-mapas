@@ -9,6 +9,9 @@ $(function() {
             Cookie.setCookie('enterprise', 10010033);
 
             $(location).attr('href','./leaflet/sellerroute.html');
+        
+        } else {
+            $('.error').css('display', 'block');
         }
     });
 
