@@ -8,21 +8,23 @@ $(function() {
 
   // const enterprise = parseInt(params.get('enterprise'));
 
-  const enterprise = Cookie.getCookie('enterprise');
+  //const enterprise = Cookie.getCookie('enterprise');
 
-  if(!enterprise) {
-    $(location).attr('href','../');
-  } else {
+  //if(!enterprise) {
+  //  $(location).attr('href','../');
+  //} else {
 
-    const user = Cookie.getCookie('user');
+  //  const user = Cookie.getCookie('user');
 
-    $('#user').text(user);
+  //  $('#user').text(user);
 
+  /*
     $('#logout').click(function() {
       Cookie.deleteCookie('enterprise');
       Cookie.deleteCookie('user');
       $(location).attr('href','../');
     });
+  */
 
     const today = getCurrentDate();
 
@@ -365,6 +367,6 @@ $(function() {
       function roundTwoDec(num){
         return Math.round(num * 100) / 100;
       }
-  }
+  //}
 
 });
