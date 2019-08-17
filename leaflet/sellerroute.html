@@ -28,20 +28,29 @@
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" id="dropdown-seller" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Vendedor</a>
           <div class="dropdown-menu dropdown-primary" aria-labelledby="dropdown-sellerMenuLink">
+            <a class="dropdown-item" href="#">Ruta</a>
+            <!--
             <a class="dropdown-item" href="./sellerroute.html?enterprise=10010033">Ruta</a>
+            -->
+            <a class="dropdown-item" href="#">Seguimiento</a>
+            <!--
             <a class="dropdown-item" href="./tracksforseller.html?enterprise=10010033">Seguimiento</a>
+            -->
           </div>
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" id="dropdown-enterprise" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Empresa</a>
           <div class="dropdown-menu dropdown-primary" aria-labelledby="dropdown-enterpriseMenuLink">
+              <a class="dropdown-item" href="#">Seguimiento</a>
+            <!--
             <a class="dropdown-item" href="./tracksforenterprise.html?enterprise=10010033">Seguimiento</a>
+            -->
           </div>
         </li>
       </ul>
       <ul class="navbar-nav my-0">
         <li class="nav-item">
-          <span class="nav-link">Ruta del vendedor</span>
+          <span class="nav-link">Bienvenido: <span id="user"></span></span>
         </li>
       </ul>
     </div>
@@ -51,30 +60,43 @@
     
     <div class="row">
       <div class="col-md-2">
+        <div class="md-form">
+          <input placeholder="Fecha" type="text" id="date" class="form-control datepicker">
+          <label for="date">Seleccione fecha</label>
+        </div>
+        <!--
         <div class="form-group">
           <label for="date"><small>Fecha</small></label>
           <input type="date" id="date" class="form-control">
         </div>
+        -->
       </div>
       <div class="col-md-3">
-        <label for="seller-select"><small>Distribuidor</small></label>
-        <select class="mdb-select colorful-select dropdown-info" id="supervisor-select" searchable="Seleccionar distribuidor">
+        <select class="mdb-select md-form colorful-select dropdown-info" id="supervisor-select" searchable="Seleccionar distribuidor">
         </select>
+        <label class="mdb-main-label"><small>Distribuidor</small></label>
       </div>
+      <!--
       <div class="col-md-3">
-        <label for="seller-select"><small>Vendedor</small></label>
+        <select class="mdb-select colorful-select dropdown-info" searchable="Seleccionar distribuidor">
+        </select>
+        <label class="mdb-main-label"><small>Distribuidor</small></label>
+      </div>
+      -->
+      <div class="col-md-3">
         <select class="mdb-select md-form colorful-select dropdown-info" id="seller-select" searchable="Seleccionar vendedor">
         </select>
+        <label class="mdb-main-label"><small>Vendedor</small></label>
       </div>
       <div class="col-md-2">
-        <label for="map-select"><small>Tipo de mapa</small></label>
         <select class="mdb-select md-form colorful-select dropdown-info" id="map-select" searchable="Seleccionar mapa">
-            <option value="0">Normal</option>
+            <option value="0" selected>Normal</option>
             <option value="1">Satélite</option>
         </select>
+        <label class="mdb-main-label"><small>Tipo de mapa</small></label>
       </div>
-      <div class="col-md-2 mb-2"><br>
-        <button type="button" id="btn-submit" class="btn blue-gradient">Consultar <i class="fas fa-eye"></i></button>
+      <div class="col-md-2 mb-2">
+        <button type="button" id="btn-submit" class="btn blue-gradient mt-3">Consultar <i class="fas fa-eye"></i></button>
       </div>
     </div>
   
@@ -137,6 +159,7 @@
 <script src="../js/popper.min.js"></script>
 <script src="../js/bootstrap.min.js"></script>
 <script src="../js/mdb.min.js"></script>
+<script src="../js/cookie.js"></script>
 <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
   integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
   crossorigin=""></script>

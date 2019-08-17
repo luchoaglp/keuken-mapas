@@ -4,333 +4,69 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Vendedor Ruta</title>
+  <title>Login</title>
+  <link rel="shortcut icon" href="./img/keuken.ico">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
   integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
   crossorigin="" rel="stylesheet"/>
-  <!-- Font Awesome -->
   <link href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" rel="stylesheet">
-  <!-- Bootstrap core CSS -->
-  <link href="css/bootstrap.min.css" rel="stylesheet">
-  <!-- Material Design Bootstrap -->
-  <link href="css/mdb.min.css" rel="stylesheet">
-  <style>
-    #map { height: 500px; }
-    #header-stats { background-color: #e3f2fd !important; }
-  </style>
+  <link href="./css/bootstrap.min.css" rel="stylesheet">
+  <link href="./css/mdb.min.css" rel="stylesheet">
 </head>
 <body>
 
-  <nav class="navbar navbar-expand-lg navbar-dark primary-color mb-2">
-      <a class="navbar-brand" href="./">Ruta del vendedor</a>
+  <nav class="navbar navbar-expand-lg navbar-dark primary-color mb-3">
+    <a class="navbar-brand" href="./">Login</a>
+      
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#maps-nav" aria-controls="maps-nav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+      
   </nav>
 
   <div class="container-fluid">
     
     <div class="row">
-      <div class="col-md-3">
-        <div class="form-group">
-          <label for="from"><small>From</small></label>
-          <input type="date" id="from" class="form-control">
+      <div class="col-md-6 offset-md-3">
+        <div class="card">
+
+          <h5 class="card-header blue-gradient white-text text-center py-4">
+            <strong>Bienvenido al sistema de mapas</strong>
+          </h5>
+        
+          <div class="card-body px-lg-5 pt-0">
+        
+            <!-- Form -->
+            <form class="text-center" style="color: #757575;" action="#!">
+              
+              <div class="md-form mt-3">
+                <input type="text" id="user" class="form-control" maxlength="10" required autofocus>
+                <label for="user">Usuario</label>
+              </div>
+        
+              <div class="md-form">
+                <input type="password" id="password" class="form-control" required>
+                <label for="password">Password</label>
+              </div>
+              <hr>
+              <button class="btn blue-gradient btn-block my-4 waves-effect z-depth-0" type="button" id="submit">Ingresar</button>
+        
+            </form>
+        
+          </div>
         </div>
-      </div>
-      <div class="col-md-3">
-        <div class="form-group">
-          <label for="to"><small>To</small></label>
-          <input type="date" id="to" value="2019-07-02" class="form-control">
-        </div>
-      </div>
-      <div class="col-md-6">
-        <label for="map-select"><small>Tipo de mapa</small></label>
-        <select class="mdb-select md-form colorful-select dropdown-info" id="map-select" searchable="Seleccionar mapa">
-            <option value="0">Normal</option>
-            <option value="1">Satélite</option>
-        </select>
       </div>
     </div>
 
-    <div class="row mb-5">
-      <div class="col-md-8">
-        <div class="card">
-          <div class="card-body">
-            <div id="map"></div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="card">
-          <div class="card-body">
-            <ul class="list-group">
-              <li class="list-group-item d-flex justify-content-between align-items-center" id="header-stats">
-              </li>
-              <li class="list-group-item d-flex justify-content-between align-items-center">
-                Vendedor: <span id="seller"></span>
-              </li>
-              <li class="list-group-item d-flex justify-content-between align-items-center">
-                <span><img src="./img/redMarker.svg" alt="...">PEDIDO</span>
-                <span class="badge badge-primary badge-pill" id="ped">0</span> 
-              </li>
-              <li class="list-group-item d-flex justify-content-between align-items-center">
-                <span><img src="./img/blueMarker.svg" alt="...">CON STOCK</span>
-                <span class="badge badge-primary badge-pill" id="mnv">0</span> 
-              </li>
-              <li class="list-group-item d-flex justify-content-between align-items-center">
-                <span><img src="./img/orangeMarker.svg" alt="...">SIN VISITA</span>
-                <span class="badge badge-primary badge-pill" id="rvn">0</span> 
-              </li>
-              <li class="list-group-item d-flex justify-content-between align-items-center">
-                <span>Con GEO</span>
-                <span class="badge badge-primary badge-pill" id="geo">0</span> 
-              </li>
-              <li class="list-group-item d-flex justify-content-between align-items-center">
-                <span>Sin GEO</span>
-                <span class="badge badge-primary badge-pill" id="wgeo">0</span> 
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-<!-- Bootstrap tooltips -->
-<script src="js/popper.min.js"></script>
-<!-- Bootstrap core JavaScript -->
-<script src="js/bootstrap.min.js"></script>
-<!-- MDB core JavaScript -->
-<script src="js/mdb.min.js"></script>
-<script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
-  integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
-  crossorigin=""></script>
-<script src="./leaflet/js/tilesLayer.js"></script>
-<script src="js/moment.min.js"></script>
+<script src="./js/popper.min.js"></script>
+<script src="./js/bootstrap.min.js"></script>
+<script src="./js/mdb.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/md5.js"></script>
+<script src="./js/cookie.js"></script>
+<script src="./js/login.js"></script>
 
-<script>
-$(function() {
-
-  $('.mdb-select').materialSelect();
-
-  let zoom = 15;
-
-  const map = L.map('map');
-
-  $headerStats = $('#header-stats');
-  $ped = $('#ped');
-  $mnv = $('#mnv');
-  $rvn = $('#rvn');
-  $geo = $('#geo');
-  $wgeo = $('#wgeo');
-  $seller = $('#seller');
-  $from = $('#from');
-  $to = $('#to');
-  $mapSelect = $('#map-select');
-
-  let from = new Date('2019-07-02').toISOString().slice(0,10);
-  let to = new Date('2019-07-02').toISOString().slice(0,10);
-
-  $headerStats.text('Ruta 425 (2019-07-02 - 2019-07-02)');
-
-  let mapLayerIndex = 0;
-
-  tilesLayer[mapLayerIndex].addTo(map);
-
-  $from.val(from);
-  $to.val(to);
-
-  drawMap('ruta_425-2019.07.03.json');
-
-  let layerIcons;
-  let layerLines;
-  let markers = [];
-  let lines = [];
-
-  function selectDates(fromArg, toArg) {
-
-    let fileName;
-
-    let dateFromSelected = fromArg.split('-');
-    dateSelected = parseInt(dateFromSelected[0]) + '-' + parseInt(dateFromSelected[1]) + '-' + parseInt(dateFromSelected[2]);
-
-    let dateToSelected = toArg.split('-');
-    dateToSelected = parseInt(dateToSelected[0]) + '-' + parseInt(dateToSelected[1]) + '-' + parseInt(dateToSelected[2]);
-    
-    let fromSelected = new Date(dateFromSelected);
-    let toSelected = new Date(dateToSelected);
-
-    if(fromSelected > toSelected) {
-      console.error('Error en fechas');
-      return;
-    } else if(fromSelected <= new Date('2019-7-2') && toSelected >= new Date('2019-7-3')) {
-      fileName = 'ruta_425-2019.07.02-ruta_425-2019.07.03.json';
-    } else if(fromSelected >= new Date('2019-7-2') && fromSelected >= new Date('2019-7-3')) {
-      fileName = 'ruta_425-2019.07.03.json';
-    } else if(fromSelected <= new Date('2019-7-3') && toSelected <= new Date('2019-7-3')) {
-      fileName = 'ruta_425-2019.07.02.json';
-    }
-
-    markers = [];
-    lines = [];
-    map.removeLayer(layerIcons);
-    map.removeLayer(layerLines);
-    $headerStats.text(`Ruta 425 (${from} - ${to})`);
-    drawMap(fileName);
-  }
-
-  $from.change(function() {
-    from = $(this).val();
-    selectDates(from, to);
-  });
-
-  $to.change(function() {
-    to = $(this).val();
-    selectDates(from, to);
-  });
-
-  $mapSelect.change(function() {
-    map.removeLayer(tilesLayer[mapLayerIndex]);
-    mapLayerIndex = parseInt($(this).find(':selected').val());
-    tilesLayer[mapLayerIndex].addTo(map);
-  });
-
-  function drawMap(fName) {
-
-    $.getJSON(`./js/${fName}`, { })
-      .done(orders => {
-
-        $seller.text(orders[0].nombre_seller);
-
-        let minLat = -Infinity;
-        let minLon = -Infinity;
-        let maxLat = Infinity;
-        let maxLon = Infinity;
-        let ped = 0;
-        let mnv = 0;
-        let rvn = 0;
-        let countGeo = 0;
-
-        orders.forEach(order => {
-
-          if(order.longitud_pdv != null && order.latitud_pdv != null) {
-
-            countGeo++;
-
-            const latPdv = parseFloat(order.latitud_pdv);
-            const lonPdv = parseFloat(order.longitud_pdv);
-            const latOrder = parseFloat(order.latitud_order);
-            const lonOrder = parseFloat(order.longitud_order);
-            
-            const distPdvOrder = roundTwoDec(L.latLng(latPdv, lonPdv).distanceTo(L.latLng(latOrder, lonOrder)) / 1000);
-
-            minLat = latPdv > minLat ? latPdv : minLat;
-            minLon = lonPdv > minLon ? lonPdv : minLon;
-            maxLat = latPdv < maxLat ? latPdv : maxLat;
-            maxLon = lonPdv < maxLon ? lonPdv : maxLon;
-            
-            switch(order.tipo_order) {
-              case 'PED':
-                ped++;
-                iconUrl = './img/redMarker.svg';
-                break;
-              case 'MNV':
-                mnv++;
-                iconUrl = './img/blueMarker.svg';
-                break;
-              case 'RVN':
-                rvn++;
-                iconUrl = './img/orangeMarker.svg';
-                break;
-              default:
-                iconUrl = './img/uniqueMarker.svg';
-                break;
-            }
-
-            const desc = `<h5>${order.nombre_pdv}</h5>
-              <p>${ moment(order.date).format('DD/MM/YYYY, hh:mm')} ${ order.nosalereason }</p><p>Total: $${order.total}</p>
-              <p>Distancia: <a href="#">${distPdvOrder} Km</a></p>
-              <p>Lat Pdv: ${latPdv}, Lon Pdv: ${lonPdv}</p>`;
-
-            const iconPdv = L.icon({
-              iconUrl,
-              iconAnchor: [22, 38],
-              popupAnchor: [0, -38]
-            });
-
-            const markerPdv = L.marker([latPdv, lonPdv], { icon: iconPdv });
-            markerPdv.bindPopup(desc);
-            markers.push(markerPdv);
-
-            if(distPdvOrder > 0) {
-              
-              const iconOrder = L.icon({
-                iconUrl: './img/seller.svg',
-                iconAnchor: [16, 29]
-              });
-
-              const markerOrder = L.marker([latOrder, lonOrder], { icon: iconOrder });
-              markers.push(markerOrder);
-
-              const linePdvOrder = [
-                [latPdv, lonPdv],
-                [latOrder, lonOrder]
-              ];
-
-              lines.push(L.polyline(linePdvOrder, { color: '#e53935', weight: 5 }));
-            }
-          
-          } else {
-
-            switch(order.tipo_order) {
-              case 'PED':
-                ped++;
-                break;
-              case 'MNV':
-                mnv++;
-                break;
-              case 'RVN':
-                rvn++;
-                break;
-            }
-          }
-        });
-
-        $ped.text(ped);
-        $mnv.text(mnv);
-        $rvn.text(rvn);
-        $geo.text(countGeo);
-        $wgeo.text(orders.length - countGeo);
-
-        layerIcons = L.layerGroup(markers);
-        layerIcons.addTo(map);
-
-        layerLines = L.layerGroup(lines);
-        layerLines.addTo(map);
-
-        const distMaxMin = L.latLng(maxLat, maxLon).distanceTo(L.latLng(minLat, minLon));
-
-        zoom = distMaxMin > 10000 ? 12 : 15;
-        
-        map.setView([(maxLat + minLat) / 2, (maxLon + minLon) / 2], zoom);
-
-        /*
-        map.on('click', function(e){
-          var coord = e.latlng;
-          var lat = coord.lat;
-          var lng = coord.lng;
-          console.log(lat + ", " + lng);
-        });
-        */
-        
-    }).fail((jqxhr, textStatus, error) => {
-      const err = textStatus + ", " + error;
-      console.log("Request Failed: " + err);
-    });
-  }
-
-  function roundTwoDec(num){
-    return Math.round(num * 100) / 100;
-  }
-});
-</script>
 </body>
 </html>

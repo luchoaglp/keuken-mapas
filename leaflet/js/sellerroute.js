@@ -1,16 +1,34 @@
 $(function() {
 
-  const params = new URLSearchParams(window.location.search);
+  // const params = new URLSearchParams(window.location.search);
   
-  if(params.has('enterprise')) {
+  // if(params.has('enterprise')) {
 
-    const enterprise = parseInt(params.get('enterprise'));
+    // const enterprise = parseInt(params.get('enterprise'));
+
+  // const enterprise = parseInt(params.get('enterprise'));
+
+  const enterprise = Cookie.getCookie('enterprise');
+
+  if(!enterprise) {
+    alert('Acceso denegado.')
+  } else {
+
+    const user = Cookie.getCookie('user');
+
+    $('#user').text(user);
 
     const today = getCurrentDate();
 
     const $date = $('#date');
 
     $date.val(today);
+
+    $date.pickadate({
+      format: 'yyyy-mm-dd',
+      formatSubmit: 'yyyy-mm-dd',
+      todayHighlight: true
+    });
     
     const map = L.map('map', {
       center: [-34.603722, -58.381592],
@@ -50,7 +68,7 @@ $(function() {
         const $timeLineContainer = $('#timeline-container');
         const $timeline = $('#timeline');
 
-        const zoom = 15;
+        const zoom = 14;
 
         let date = today;
         const outsideRadio = 0.1;
@@ -79,9 +97,11 @@ $(function() {
           }
         });
 
+        $sellerSelect.html(supervisorSelected(supervisors.keys().next().value));
         $supervisorSelect.html(supervisorSelectHtml);
 
-        $sellerSelect.html(supervisorSelected(supervisors.keys().next().value));
+        $sellerSelect.find('option:eq(0)').attr('selected', true);
+        $supervisorSelect.find('option:eq(0)').attr('selected', true);
 
         function supervisorSelected(supervisor) {
 
@@ -127,7 +147,7 @@ $(function() {
           tilesLayer[mapLayerIndex].addTo(map);
         });
 
-        $('.mdb-select').material_select();
+        $('.mdb-select').materialSelect();
           
         $btnSubmit.click(function() {
 
