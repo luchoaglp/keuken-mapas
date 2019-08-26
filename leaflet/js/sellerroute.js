@@ -176,7 +176,7 @@ $(function() {
 
                   $timeLineContainer.css('display', 'block');
 
-                  $timeline.attr('href', `../timeline/?enterprise=${enterprise}&seller=${seller}&date=${date}`);
+                  $timeline.attr('href', `../timeline/?seller=${seller}&date=${date}`);
 
                   //$canvasContainer.show();
 

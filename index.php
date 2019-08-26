@@ -4,13 +4,14 @@ if($_POST) {
 
   $user = trim($_POST['user']);
   $password = trim($_POST['password']);
+  $enterprise = intval($_POST['enterprise']);
   
   if(strcmp($user, 'keuken') === 0 && strcmp($user, '123456')) {
 
     session_start();
     
     $_SESSION['user'] = $user;
-    $_SESSION['enterprise'] = 10010033;
+    $_SESSION['enterprise'] = $enterprise;
     
     header('Location: ./leaflet/sellerroute.php');
 
@@ -61,9 +62,14 @@ if($_POST) {
           <div class="card-body px-lg-5 pt-0">
         
             <form action="<?php echo $_SERVER['PHP_SELF']; ?>" class="text-center" style="color: #757575;" method="POST">
+
+            <div class="md-form mt-5">
+                <input type="number" name="enterprise" class="form-control" value="10010033" required autofocus>
+                <label for="enterprise">Empresa</label>
+              </div>
               
-              <div class="md-form mt-5">
-                <input type="text" name="user" class="form-control" maxlength="10" required autofocus>
+              <div class="md-form">
+                <input type="text" name="user" class="form-control" maxlength="10" required>
                 <label for="user">Usuario</label>
               </div>
               <div class="md-form">
