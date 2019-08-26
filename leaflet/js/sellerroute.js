@@ -1,42 +1,14 @@
 $(function() {
 
-  // const params = new URLSearchParams(window.location.search);
-  
-  // if(params.has('enterprise')) {
-
-    // const enterprise = parseInt(params.get('enterprise'));
-
-  // const enterprise = parseInt(params.get('enterprise'));
-
-  //const enterprise = Cookie.getCookie('enterprise');
-
-  //if(!enterprise) {
-  //  $(location).attr('href','../');
-  //} else {
-
-  //  const user = Cookie.getCookie('user');
-
-  //  $('#user').text(user);
-
-  /*
-    $('#logout').click(function() {
-      Cookie.deleteCookie('enterprise');
-      Cookie.deleteCookie('user');
-      $(location).attr('href','../');
-    });
-  */
-
     const today = getCurrentDate();
 
     const $date = $('#date');
 
+    console.log(new Date().toJSON())
+
     $date.val(today);
 
-    $date.pickadate({
-      format: 'yyyy-mm-dd',
-      formatSubmit: 'yyyy-mm-dd',
-      todayHighlight: true
-    });
+    $date.pickadate();
     
     const map = L.map('map', {
       center: [-34.603722, -58.381592],
@@ -361,7 +333,19 @@ $(function() {
       });
       
       function getCurrentDate() {
-        return new Date().toJSON().slice(0, 10);
+        const today = new Date();
+        let dd = today.getDate();
+        let mm = today.getMonth() + 1;
+        const yyyy = today.getFullYear();
+
+        if(dd < 10) {
+          dd = '0' + dd;
+        } 
+      
+        if(mm < 10) {
+          mm = '0' + mm;
+        }
+        return yyyy + '-' + mm + '-' + dd;
       }
         
       function roundTwoDec(num){

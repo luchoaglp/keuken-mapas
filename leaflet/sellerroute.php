@@ -179,6 +179,7 @@ if(!isset($_SESSION['user'])) {
 <script src="../js/moment.min.js"></script>
 <script src="../js/OrderDescription.js"></script>
 <script src="./js/sellerroute.js"></script>
+<script src="../js/bootstrap-datepicker.es.js"></script>
 <script>
 const enterprise = <?php echo $_SESSION['enterprise']; ?>;
 </script>
