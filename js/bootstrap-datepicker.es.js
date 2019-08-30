@@ -6,6 +6,7 @@ $.extend($.fn.pickadate.defaults, {
     monthsShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
     today: "Hoy",
     clear: "Borrar",
+    close: 'Cerrar',
     format: 'yyyy-mm-dd',
     formatSubmit: 'yyyy-mm-dd',
     todayHighlight: true,
