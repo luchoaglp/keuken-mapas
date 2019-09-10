@@ -27,48 +27,9 @@ if(!isset($_SESSION['user'])) {
 </head>
 <body>
 
-  <nav class="navbar navbar-expand-lg navbar-dark primary-color mb-3">
-    <a class="navbar-brand" href="./">Inicio</a>
-      
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#maps-nav" aria-controls="maps-nav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-      
-    <div class="collapse navbar-collapse" id="maps-nav">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" id="dropdown-seller" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Vendedor</a>
-          <div class="dropdown-menu dropdown-primary" aria-labelledby="dropdown-sellerMenuLink">
-            <a class="dropdown-item" href="#">Ruta</a>
-            <!--
-            <a class="dropdown-item" href="./sellerroute.html?enterprise=10010033">Ruta</a>
-            -->
-            <a class="dropdown-item" href="#">Seguimiento</a>
-            <!--
-            <a class="dropdown-item" href="./tracksforseller.html?enterprise=10010033">Seguimiento</a>
-            -->
-          </div>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" id="dropdown-enterprise" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Empresa</a>
-          <div class="dropdown-menu dropdown-primary" aria-labelledby="dropdown-enterpriseMenuLink">
-              <a class="dropdown-item" href="#">Seguimiento</a>
-            <!--
-            <a class="dropdown-item" href="./tracksforenterprise.html?enterprise=10010033">Seguimiento</a>
-            -->
-          </div>
-        </li>
-      </ul>
-      <ul class="navbar-nav my-0">
-        <li class="nav-item">
-          <span class="nav-link">Bienvenido: <?php echo $_SESSION['user']; ?></span>
-        </li>
-      </ul>
-      <a href="../logout.php" class="btn-floating btn-sm btn-danger" id="logout"><i class="fas fa-power-off"></i></a>
-    </div>
-  </nav>
+  <?php require_once './commons/navbar.php'; ?>
 
-  <div class="container-fluid">
+  <div class="container-fluid mt-2">
     
     <div class="row">
       <div class="col-md-2">
@@ -76,25 +37,12 @@ if(!isset($_SESSION['user'])) {
           <input placeholder="Fecha" type="text" id="date" class="form-control datepicker">
           <label for="date">Seleccione fecha</label>
         </div>
-        <!--
-        <div class="form-group">
-          <label for="date"><small>Fecha</small></label>
-          <input type="date" id="date" class="form-control">
-        </div>
-        -->
       </div>
       <div class="col-md-3">
         <select class="mdb-select md-form colorful-select dropdown-info" id="supervisor-select" searchable="Seleccionar distribuidor">
         </select>
         <label class="mdb-main-label"><small>Distribuidor</small></label>
       </div>
-      <!--
-      <div class="col-md-3">
-        <select class="mdb-select colorful-select dropdown-info" searchable="Seleccionar distribuidor">
-        </select>
-        <label class="mdb-main-label"><small>Distribuidor</small></label>
-      </div>
-      -->
       <div class="col-md-3">
         <select class="mdb-select md-form colorful-select dropdown-info" id="seller-select" searchable="Seleccionar vendedor">
         </select>
@@ -123,7 +71,7 @@ if(!isset($_SESSION['user'])) {
       <div class="col-md-3">
         <div class="card">
           <div class="card-body">
-            <ul class="list-group" id="stats">
+            <ul class="list-group">
               <li class="list-group-item d-flex justify-content-between align-items-center">
                 <span><img src="../img/redMarker.svg" alt="red-marker" class="marker">PEDIDO</span>
                 <span class="badge badge-primary badge-pill" id="ped">0</span> 
@@ -165,6 +113,18 @@ if(!isset($_SESSION['user'])) {
       </div>
     </div>
 
+  </div>
+
+  <div class="modal fade left" id="modal-items" tabindex="-1" role="dialog" aria-labelledby="modalItemsLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-full-height modal-left modal-notify modal-info" role="document">
+      <div class="modal-content">
+        <div class="modal-header unique-color white-text">
+          <h4 class="title">Detalle</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+        <div class="modal-body mb-0" id="items"></div>
+      </div>
+    </div>
   </div>
 
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>

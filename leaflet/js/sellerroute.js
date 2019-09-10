@@ -45,6 +45,8 @@ $(function() {
       const $btnSubmit = $('#btn-submit');
       const $timeLineContainer = $('#timeline-container');
       const $timeline = $('#timeline');
+      const $items = $('#items');
+      const $modalItems = $('#modal-items');
 
       const zoom = 14;
 
@@ -146,7 +148,7 @@ $(function() {
 
                 $timeLineContainer.css('display', 'block');
 
-                $timeline.attr('href', `../timeline/?seller=${seller}&date=${date}`);
+                $timeline.attr('href', `./timeline/?seller=${seller}&date=${date}`);
 
                 let minLat = -Infinity;
                 let minLon = -Infinity;
@@ -216,6 +218,7 @@ $(function() {
                   orderDescription.setNoSaleReason(order.nosalereason);
                   orderDescription.setOrderTotal(roundTwoDec(order.total));
                   orderDescription.setBadgeColor(badgeColor);
+                  orderDescription.setItems(order.orderItems); 
 
                   let latPdv;
                   let lonPdv;
@@ -337,6 +340,48 @@ $(function() {
                     markers.push(markerOrder);
                   }
 
+                  showModal = pdv => {
+                    const items = orders.find(o => o.pdv === pdv).orderItems;
+                    let totalSinIva = 0;
+                    let totalConIva = 0;
+                    let itemHtml = `<table class="table table-striped table-bordered table-sm">
+                                      <thead>
+                                        <tr class="text-center">
+                                          <th>Cantidad</th>
+                                          <th>Descripción</th>
+                                          <th>Pr. Unitario</th>
+                                          <th>Pr. Unitario con IVA</th>
+                                          <th>Subtotal</th>
+                                          <th>Subtotal con IVA</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>`;
+                    items.forEach(item => {
+                      itemHtml += '<tr>';
+                        itemHtml += `<td>${item.quantity}</td>`;
+                        itemHtml += `<td>${item.description}</td>`;
+                        itemHtml += `<td class="text-right">${item.unitValue}</td>`;
+                        itemHtml += `<td class="text-right">${item.ivaUnitValue}</td>`;
+                        itemHtml += `<td class="text-right">${item.subTotalValue}</td>`;
+                        itemHtml += `<td class="text-right">${item.totalValueWithIVA}</td>`;
+                      itemHtml += '</tr>';
+                      totalSinIva += parseFloat(item.subTotalValue);
+                      totalConIva += parseFloat(item.totalValueWithIVA);
+                    });
+
+                    itemHtml += 
+                    `<tr>
+                      <td colspan="4">Totales</td>
+                      <td class="text-right">${roundTwoDec(totalSinIva)}</td>
+                      <td class="text-right">${roundTwoDec(totalConIva)}</td>
+                    </td>`;
+                    
+                    itemHtml += '</tbody></table>';
+
+                    $items.html(itemHtml);
+                    $modalItems.modal('show');
+                  }
+
                 });
 
                 $ped.text(ped);
@@ -354,7 +399,13 @@ $(function() {
                 layerLines = L.layerGroup(lines);
                 layerLines.addTo(map);
 
-                map.setView([(maxLat + minLat) / 2, (maxLon + minLon) / 2], zoom);
+                const centerLat = (maxLat + minLat) / 2;
+                const centerLon = (maxLon + minLon) / 2;
+
+                if(!isNaN(centerLat) && !isNaN(centerLon)) {
+                  map.setView([centerLat, centerLon], zoom);
+                }
+
               }
 
             }).fail((jqxhr, textStatus, error) => {

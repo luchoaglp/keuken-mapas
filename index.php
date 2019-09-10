@@ -40,7 +40,7 @@ if($_POST) {
 </head>
 <body>
 
-  <nav class="navbar navbar-expand-lg navbar-dark primary-color mb-5">
+  <nav class="navbar navbar-expand-lg navbar-dark unique-color mb-5">
     <a class="navbar-brand" href="#">Login</a>
       
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#maps-nav" aria-controls="maps-nav" aria-expanded="false" aria-label="Toggle navigation">

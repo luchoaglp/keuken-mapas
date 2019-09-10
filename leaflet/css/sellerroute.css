@@ -1,4 +1,4 @@
-#map { height: 600px; }
+#map { height: 560px; }
 .fullscreen-icon { background-image: url(../img/icon-fullscreen.png); }
 .leaflet-retina .fullscreen-icon { background-image: url(../img/icon-fullscreen-2x.png); background-size: 26px 26px; }
 .leaflet-container:-webkit-full-screen { width: 100% !important; height: 100% !important; z-index: 99999; }
