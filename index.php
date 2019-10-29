@@ -2,26 +2,31 @@
 
 if($_POST) {
 
-  $user = trim($_POST['user']);
+  $username = trim($_POST['username']);
   $password = trim($_POST['password']);
-  $enterprise = intval($_POST['enterprise']);
-  
-  if(strcmp($user, 'keuken') === 0 && strcmp($user, '123456')) {
+
+  $response = file_get_contents('http://keu.webhop.org:8991/checklogin?username=' . $username . '&password=' . $password);
+
+  if($response === 'ERROR') {
+    $error = true;
+  } else {
+
+    $response = json_decode($response, true);
+
+    $enterprise = intval($response["enterprise"]);
+    $user = $response["user_type"];
 
     session_start();
     
-    $_SESSION['user'] = $user;
     $_SESSION['enterprise'] = $enterprise;
-    
-    header('Location: ./leaflet/sellerroute.php');
+    $_SESSION['user'] = $user;
 
-  } else {
-    $error = true;
+    header('Location: ./leaflet/sellerroute.php');
+    die();
   }
 }
 
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -63,17 +68,19 @@ if($_POST) {
         
             <form action="<?php echo $_SERVER['PHP_SELF']; ?>" class="text-center" style="color: #757575;" method="POST">
 
-            <div class="md-form mt-5">
+              <!--
+              <div class="md-form mt-5">
                 <input type="number" name="enterprise" class="form-control" value="10010033" required autofocus>
                 <label for="enterprise">Empresa</label>
               </div>
+              -->
               
-              <div class="md-form">
-                <input type="text" name="user" class="form-control" maxlength="10" required>
-                <label for="user">Usuario</label>
+              <div class="md-form mt-5">
+                <input type="text" name="username" id="username" class="form-control" maxlength="30" required autofocus>
+                <label for="username">Usuario</label>
               </div>
               <div class="md-form">
-                <input type="password" name="password" class="form-control" required>
+                <input type="password" name="password" id="password" class="form-control" maxlength="30" required>
                 <label for="password">Password</label>
               </div>
               <hr>

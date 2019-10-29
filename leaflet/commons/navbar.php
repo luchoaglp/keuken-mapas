@@ -11,22 +11,21 @@
           <a class="dropdown-item" href="sellerroute.php">Ruta</a>
           <!--
             <a class="dropdown-item" href="./sellerroute.html?enterprise=10010033">Ruta</a>
-            -->
-          <a class="dropdown-item" href="#">Seguimiento</a>
+            <a class="dropdown-item" href="#">Seguimiento</a>
+          -->
           <!--
             <a class="dropdown-item" href="./tracksforseller.html?enterprise=10010033">Seguimiento</a>
             -->
         </div>
       </li>
+      <!--
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" id="dropdown-enterprise" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Empresa</a>
         <div class="dropdown-menu dropdown-primary" aria-labelledby="dropdown-enterpriseMenuLink">
           <a class="dropdown-item" href="#">Seguimiento</a>
-          <!--
-            <a class="dropdown-item" href="./tracksforenterprise.html?enterprise=10010033">Seguimiento</a>
-            -->
         </div>
       </li>
+      -->
     </ul>
     <ul class="navbar-nav my-0">
       <li class="nav-item">

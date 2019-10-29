@@ -39,9 +39,9 @@ if(!isset($_SESSION['user'])) {
         </div>
       </div>
       <div class="col-md-3">
-        <select class="mdb-select md-form colorful-select dropdown-info" id="supervisor-select" searchable="Seleccionar distribuidor">
+        <select class="mdb-select md-form colorful-select dropdown-info" id="supervisor-select" searchable="Seleccionar supervisor">
         </select>
-        <label class="mdb-main-label"><small>Distribuidor</small></label>
+        <label class="mdb-main-label"><small>Supervisor</small></label>
       </div>
       <div class="col-md-3">
         <select class="mdb-select md-form colorful-select dropdown-info" id="seller-select" searchable="Seleccionar vendedor">
